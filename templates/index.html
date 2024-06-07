@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBay Web Scraping</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .help-text {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>eBay Web Scraping</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="input-file"><i class="fas fa-file"></i> Upload File:</label>
+            <input type="file" id="input-file" name="file" accept=".txt" required>
+            <div class="help-text">Upload a text file containing eBay listing IDs, one per line.</div>
+
+            <label for="output-format">Output Format:</label>
+            <select id="output-format" name="output_format" required>
+                <option value="" disabled selected hidden>Select Output Format</option>
+                <option value="excel">Excel</option>
+                <option value="json">JSON</option>
+                <option value="both">Both</option>
+            </select>
+
+            <div class="help-text">Select the desired output format.</div>
+
+            <button type="submit"><i class="fas fa-download"></i> Scrape Data</button>
+        </form>
+    </div>
+</body>
+</html>
