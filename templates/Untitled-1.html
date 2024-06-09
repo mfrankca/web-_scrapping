@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Upload Listings File</title>
+  </head>
+  <body>
+    <h1>Upload Listings File</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label for="input_file">Choose file:</label>
+      <input type="file" id="input_file" name="input_file" required>
+      <br><br>
+      <label for="output_format">Select output format:</label>
+      <br>
+      <input type="checkbox" id="excel" name="output_format" value="excel">
+      <label for="excel">Excel</label>
+      <br>
+      <input type="checkbox" id="json" name="output_format" value="json">
+      <label for="json">JSON</label>
+      <br>
+      <input type="checkbox" id="both" name="output_format" value="both">
+      <label for="both">Both</label>
+      <br><br>
+      <input type="submit" value="Upload">
+    </form>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Success</title>
+  </head>
+  <body>
+    <h1>Files Created Successfully</h1>
+    <ul>
+      {% for file in output_files %}
+        <li><a href="/download/{{ file }}">{{ file }}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
