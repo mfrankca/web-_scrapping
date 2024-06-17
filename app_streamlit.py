@@ -1,9 +1,34 @@
+
 import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import json
 import os
+import boto3
+from io import BytesIO
+import base64
+
+#st.set_page_config(layout="wide")
+
+# Function to compare two dataframes
+def compare_catalogs(file1, file2, file_type):
+    if file_type == 'Excel':
+        df1 = pd.read_excel(file1)
+        df2 = pd.read_excel(file2)
+    else:
+        df1 = pd.read_json(file1)
+        df2 = pd.read_json(file2)
+
+    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
+    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
+
+    return new_entries, deleted_entries
+# Function to save the comparison result to an Excel file
+def save_comparison_result(new_entries, deleted_entries, output_file):
+    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+        new_entries.to_excel(writer, index=False, sheet_name='New Entries')
+        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
 
 # Extracted web scraping logic from ebay_scrap_new_V1.2.py
 def scrape_ebay(item):
@@ -140,36 +165,248 @@ def generate_output_files(data, output_format):
 
     return output_files
 
-st.title('Web Scraping App')
-st.write('Upload a file with listing numbers and select the output file format.')
 
-uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
-output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'Both'])
+def load_colors(file=None):
+    # AWS S3 configuration
+    BUCKET_NAME = 'sunraycolors'
+    EXCEL_FILE_KEY = 'colors.xlsx'
 
-if uploaded_file is not None:
-    if st.button('Scrape Data'):
-        # Save uploaded file temporarily
-        input_filepath = os.path.join('temp', uploaded_file.name)
-        with open(input_filepath, 'wb') as f:
-            f.write(uploaded_file.getbuffer())
+    # Fetch environment variables
+    aws_access_key_id = 'AKIA4MTWLVLGQWWYGGQC'
+    aws_secret_access_key = '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'
+    aws_default_region = 'us-east-2'
+    # Initialize S3 client
+    s3_client = boto3.client(
+    's3',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=aws_default_region
+)
+    response = s3_client.get_object(Bucket=BUCKET_NAME, Key=EXCEL_FILE_KEY)
+    df = pd.read_excel(BytesIO(response['Body'].read()), sheet_name='Colors')
+    return df
 
-        # Perform web scraping
-        data = perform_web_scraping(input_filepath)
+# Function to get Pantone color information
+def get_pantone_color(pantone_number):
+    response = requests.get(f"https://connect.pantone.com//id?hex={pantone_number.lstrip('#')}")
+    if response.status_code == 200:
+        return response.json()
+    else:
+       st.error("Error fetching Pantone color information.")
+       return None
 
-        if data:
-            # Generate output files
-            output_files = generate_output_files(data, output_format)
+def load_dataframe(uploaded_file):
+    if uploaded_file.name.endswith('.json'):
+        df = pd.read_json(uploaded_file)
+    elif uploaded_file.name.endswith('.xlsx'):
+        df = pd.read_excel(uploaded_file)
+    else:
+        raise ValueError("Unsupported file format")
+    return df
 
-            st.success('Scraping and file generation completed successfully!')
+def get_base64_of_bin_file(png_file):
+    with open(png_file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-            for file in output_files:
-                with open(file, 'rb') as f:
-                    btn = st.download_button(
-                        label=f"Download {file}",
-                        data=f,
-                        file_name=file,
-                        mime='application/octet-stream'
+def build_markup_for_logo(
+    png_file,
+    background_position="50% 10%",
+    margin_top="10%",
+    image_width="60%",
+    image_height="",
+):
+    binary_string = get_base64_of_bin_file(png_file)
+    return """
+            <style>
+                [data-testid="stSidebarNav"] {
+                    background-image: url("data:image/png;base64,%s");
+                    background-repeat: no-repeat;
+                    background-position: %s;
+                    margin-top: %s;
+                    background-size: %s %s;
+                }
+            </style>
+            """ % (
+        binary_string,
+        background_position,
+        margin_top,
+        image_width,
+        image_height,
+    )
+def add_logo(png_file):
+    logo_markup = build_markup_for_logo(png_file)
+    st.markdown(
+        logo_markup,
+        unsafe_allow_html=True,
+    )  
+# Streamlit application
+def main():
+    
+    # Add logo to the sidebar
+
+    image_path = "uploads//logo.png"
+    st.sidebar.image(image_path, use_column_width=True)
+    st.title("Welcome to SunRayCity Managment")
+    
+    # Add CSS for spacing
+    st.sidebar.markdown(
+        """
+        <style>
+        .sidebar .radio-group {
+            margin-bottom: 40px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    st.sidebar.title("Sun Ray City Managment")
+    option = st.sidebar.radio("Choose an option", 
+                              ["eBay Web Scraping", 
+                               "Color Management", 
+                               "Product Catalog Management", 
+                               "Customers Management", 
+                               "Compare eBay and eCommerce Product Catalogs"])
+
+    if option == "eBay Web Scraping":
+        st.header('Web Scraping App')
+        st.write('Upload a file with listing numbers and select the output file format.')
+
+        uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
+        output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'Both'])
+
+        if uploaded_file is not None:
+            if st.button('Scrape Data'):
+                # Save uploaded file temporarily
+                input_filepath = os.path.join('temp', uploaded_file.name)
+                with open(input_filepath, 'wb') as f:
+                    f.write(uploaded_file.getbuffer())
+
+                # Perform web scraping
+                data = perform_web_scraping(input_filepath)
+
+                if data:
+                    # Generate output files
+                    output_files = generate_output_files(data, output_format)
+
+                    st.success('Scraping and file generation completed successfully!')
+
+                    for file in output_files:
+                        with open(file, 'rb') as f:
+                            btn = st.download_button(
+                                label=f"Download {file}",
+                                data=f,
+                                file_name=file,
+                                mime='application/octet-stream'
+                            )
+
+        if not os.path.exists('temp'):
+            os.makedirs('temp')
+            
+    if option == "Product Catalog Management":
+        st.header('Product Catalog Management')
+        st.write('Select a file to load product data.')
+
+        uploaded_file = st.file_uploader("Choose a file", type=["json", "xlsx"])
+
+        if uploaded_file is not None:
+                    st.write('Product Data:')
+                    df = load_dataframe(uploaded_file)
+                    edited_df = st.data_editor(df, column_config={
+        "Listing ID": st.column_config.NumberColumn(
+            "Listing ID"
+        ),
+        
+    }, num_rows="dynamic", key='product_data_editor',hide_index=None,use_container_width=True)
+
+                    if st.button('Save Changes'):
+                        if file_type == 'Excel':
+                            edited_df.to_excel(file_path, index=False)
+                        elif file_type == 'JSON':
+                            edited_df.to_json(file_path, orient='records', indent=2)
+                        st.success('Changes saved successfully!')
+
+        #else:
+         #   st.error("Invalid directory path.")
+        
+    elif option == "Color Management":
+        st.header('Color Management')
+        st.write('Loading color data from S3...')
+        
+        # AWS S3 configuration
+        BUCKET_NAME = 'sunraycolors'
+        EXCEL_FILE_KEY = 'colors.xlsx'
+
+        df = load_colors( EXCEL_FILE_KEY)
+        if df is not None:
+           #st.write('Color Data:', df)
+
+            ###edited_df = st.data_editor(df, num_rows="dynamic")
+            color_hex='FF6F61'
+            edited_df=st.data_editor(
+    df,num_rows="dynamic"
+)
+
+            if st.button('Save Changes'):
+                with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
+                    edited_df.to_excel(writer, index=False)
+                st.success('Changes saved successfully!')
+            # Display color previews for selected row
+            if 'selected_rows' not in st.session_state:
+                st.session_state.selected_rows = []
+
+            edited_df['Select'] = False
+
+            # Select row checkbox
+            edited_df['Select'] = edited_df.apply(lambda row: st.checkbox("", key=row.name, value=row.name in st.session_state.selected_rows), axis=1)
+            selected_row = edited_df.loc[edited_df['Select'] == True]
+
+            if not selected_row.empty:
+                color_hex = selected_row.iloc[0]["Hex Code"]
+                pantone_number = selected_row.iloc[0]["Pantone Number"]
+                
+                st.write('Selected Color Preview:')
+                st.markdown(
+                    f'<div style="width: 100px; height: 50px; background-color: {color_hex}; border: 1px solid #000;"></div>',
+                    unsafe_allow_html=True
+                )
+                st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
+            # Display color previews
+            st.write('Color Previews:')
+            for index, row in edited_df.iterrows():
+              color_hex = row["Hex Code"]
+              pantone_number = row["Pantone Number"]
+              st.markdown(
+                    f'<div style="display: inline-block; width: 100px; height: 50px; background-color: {color_hex}; border: 1px solid #000; margin: 5px;"></div>',
+                    unsafe_allow_html=True
+                )
+              st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
+                
+            pantone_number = st.text_input('Enter Pantone Number:')
+            if pantone_number:
+                color_info = get_pantone_color(pantone_number)
+                if color_info:
+                    st.write('Pantone Color Information:', color_info)
+                    st.markdown(
+                        f"<div style='background-color:#{color_info['hex']};height:100px;width:100%;'></div>",
+                        unsafe_allow_html=True
                     )
 
-if not os.path.exists('temp'):
-    os.makedirs('temp')
+    elif option == "Compare eBay and eCommerce Product Catalogs":
+        file_type = st.selectbox("Select file type", ["Excel", "JSON"])
+        
+        file1 = st.file_uploader("Upload first file", type=['xlsx', 'json'] if file_type == 'Excel' else ['json'])
+        file2 = st.file_uploader("Upload second file", type=['xlsx', 'json'] if file_type == 'Excel' else ['json'])
+
+        if file1 and file2:
+            new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
+
+            output_file = "comparison_result.xlsx"
+            save_comparison_result(new_entries, deleted_entries, output_file)
+
+            st.success(f"Comparison complete! Download the result below.")
+            st.download_button("Download comparison result", data=open(output_file, "rb").read(), file_name=output_file)
+
+if __name__ == "__main__":
+    main()
