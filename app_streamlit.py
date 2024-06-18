@@ -370,6 +370,10 @@ def main():
            color_value = selected_record['Color']
            selected_color = st.color_picker('Select a color', color_value)
            st.write(f'Selected Color: {selected_color}')
+           st.markdown(
+                    f'<div style="display: inline-block; width: 100px; height: 50px; background-color: {selected_color}; border: 1px solid #000; margin: 5px;"></div>',
+                    unsafe_allow_html=True
+                )
         else:
            st.write('Select a row to preview the color')
                 
