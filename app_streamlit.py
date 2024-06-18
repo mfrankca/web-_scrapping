@@ -365,17 +365,12 @@ def main():
         # Get the selected record
         selected_record = get_selected_record(edited_df)
 
-        # If a record is selected, display the color picker with the corresponding color
+        # If a record is selected, display the hex code value
         if selected_record is not None:
            color_value = selected_record['Color']
-           selected_color = st.color_picker('Select a color', color_value)
-           st.write(f'Selected Color: {selected_color}')
-           st.markdown(
-                    f'<div style="display: inline-block; width: 100px; height: 50px; background-color: {selected_color}; border: 1px solid #000; margin: 5px;"></div>',
-                    unsafe_allow_html=True
-                )
+           st.write(f'Selected Hex Code: {color_value}')
         else:
-           st.write('Select a row to preview the color')
+            st.write('Select a row to see the hex code value')    
                 
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
