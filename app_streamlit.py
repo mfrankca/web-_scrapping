@@ -344,7 +344,7 @@ def main():
            #st.write('Color Data:', df)
 
             ###edited_df = st.data_editor(df, num_rows="dynamic")
-            color_hex='FF6F61'
+            #color_hex='FF6F61'
             edited_df=st.data_editor(
     df,num_rows="dynamic"
 )
