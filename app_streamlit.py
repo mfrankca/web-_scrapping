@@ -172,9 +172,9 @@ def load_colors(file=None):
     EXCEL_FILE_KEY = 'colors.xlsx'
 
     # Fetch environment variables
-    aws_access_key_id = ''
-    aws_secret_access_key = ''
-    aws_default_region = ''
+    aws_access_key_id = st.secrets["aws_access_key_id"]
+    aws_secret_access_key = st.secrets["aws_secret_access_key"]
+    aws_default_region = st.secrets["aws_default_region"]
     # Initialize S3 client
     s3_client = boto3.client(
     's3',
