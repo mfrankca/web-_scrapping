@@ -349,29 +349,29 @@ def main():
     df,num_rows="dynamic"
 )
 
-            if st.button('Save Changes'):
+        if st.button('Save Changes'):
                 with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
                     edited_df.to_excel(writer, index=False)
                 st.success('Changes saved successfully!')
                 
-                selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
-                if selected_rows:
-                   selected_row_index = selected_rows[0]
-                   return df.iloc[selected_row_index]
+        selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
+        if selected_rows:
+           selected_row_index = selected_rows[0]
+           return df.iloc[selected_row_index]
 
-                if not selected_row.empty:
+        if not selected_row.empty:
                     color_hex = selected_row.iloc[0]["Hex Code"]
                     pantone_number = selected_row.iloc[0]["Pantone Number"]
                 
-                st.write('Selected Color Preview:')
-                st.markdown(
+        st.write('Selected Color Preview:')
+        st.markdown(
                     f'<div style="width: 100px; height: 50px; background-color: {color_hex}; border: 1px solid #000;"></div>',
                     unsafe_allow_html=True
                 )
-                st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
+        st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
             # Display color previews
-            st.write('Color Previews:')
-            for index, row in edited_df.iterrows():
+        st.write('Color Previews:')
+        for index, row in edited_df.iterrows():
               color_hex = row["Hex Code"]
               pantone_number = row["Pantone Number"]
               st.markdown(
@@ -380,8 +380,8 @@ def main():
                 )
               st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
                 
-            pantone_number = st.text_input('Enter Pantone Number:')
-            if pantone_number:
+        pantone_number = st.text_input('Enter Pantone Number:')
+        if pantone_number:
                 color_info = get_pantone_color(pantone_number)
                 if color_info:
                     st.write('Pantone Color Information:', color_info)
