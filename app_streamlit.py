@@ -353,19 +353,15 @@ def main():
                 with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
                     edited_df.to_excel(writer, index=False)
                 st.success('Changes saved successfully!')
-            # Display color previews for selected row
-            if 'selected_rows' not in st.session_state:
-                st.session_state.selected_rows = []
+                
+                selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
+                if selected_rows:
+                   selected_row_index = selected_rows[0]
+                   return df.iloc[selected_row_index]
 
-            edited_df['Select'] = False
-
-            # Select row checkbox
-            edited_df['Select'] = edited_df.apply(lambda row: st.checkbox("", key=row.name, value=row.name in st.session_state.selected_rows), axis=1)
-            selected_row = edited_df.loc[edited_df['Select'] == True]
-
-            if not selected_row.empty:
-                color_hex = selected_row.iloc[0]["Hex Code"]
-                pantone_number = selected_row.iloc[0]["Pantone Number"]
+                if not selected_row.empty:
+                    color_hex = selected_row.iloc[0]["Hex Code"]
+                    pantone_number = selected_row.iloc[0]["Pantone Number"]
                 
                 st.write('Selected Color Preview:')
                 st.markdown(
