@@ -362,7 +362,8 @@ def main():
             
         # Get the selected record
     selected_record = get_selected_record()
-
+   # Update selected rows in session state
+    st.session_state["selected_rows"] = edited_df.index[edited_df["_selected"] == True].tolist()
     # If a record is selected, display the hex code value
     if selected_record is not None:
        color_value = selected_record['Color']
