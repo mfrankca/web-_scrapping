@@ -356,6 +356,10 @@ def main():
             edited_df=st.data_editor(
     df,num_rows="dynamic"
 )
+    # Initialize session state for selected rows
+    if "selected_rows" not in st.session_state:  
+       st.session_state["selected_rows"] = []        
+            
         # Get the selected record
     selected_record = get_selected_record()
 
