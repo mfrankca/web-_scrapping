@@ -243,12 +243,12 @@ def add_logo(png_file):
     )  
     
 # Function to get the selected record
-def get_selected_record(df):
-    selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
+def get_selected_record():
+    selected_rows = st.session_state["data_editor"]["selected_rows"]
     if selected_rows:
         selected_row_index = selected_rows[0]
-        return df.iloc[selected_row_index]
-    return None    
+        return edited_df.iloc[selected_row_index]
+    return None   
 # Streamlit application
 def main():
     
@@ -356,21 +356,24 @@ def main():
             edited_df=st.data_editor(
     df,num_rows="dynamic"
 )
+        # Get the selected record
+    selected_record = get_selected_record()
 
-        if st.button('Save Changes'):
+    # If a record is selected, display the hex code value
+    if selected_record is not None:
+       color_value = selected_record['Color']
+       st.write(f'Selected Hex Code: {color_value}')
+    else:
+       st.write('Select a row to see the hex code value')
+    
+    
+    
+    if st.button('Save Changes'):
                 with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
                     edited_df.to_excel(writer, index=False)
                 st.success('Changes saved successfully!')
                 
-        # Get the selected record
-        selected_record = get_selected_record(edited_df)
-
-        # If a record is selected, display the hex code value
-        if selected_record is not None:
-           color_value = selected_record['Color']
-           st.write(f'Selected Hex Code: {color_value}')
-        else:
-            st.write('Select a row to see the hex code value')    
+       
                 
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
