@@ -241,6 +241,14 @@ def add_logo(png_file):
         logo_markup,
         unsafe_allow_html=True,
     )  
+    
+# Function to get the selected record
+def get_selected_record(df):
+    selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
+    if selected_rows:
+        selected_row_index = selected_rows[0]
+        return df.iloc[selected_row_index]
+    return None    
 # Streamlit application
 def main():
     
@@ -354,43 +362,19 @@ def main():
                     edited_df.to_excel(writer, index=False)
                 st.success('Changes saved successfully!')
                 
-        selected_rows = st.session_state.get('data_editor', {}).get('selected_rows', [])
-        if selected_rows:
-           selected_row_index = selected_rows[0]
-           return df.iloc[selected_row_index]
+        # Get the selected record
+        selected_record = get_selected_record(edited_df)
 
-        if not selected_row.empty:
-                    color_hex = selected_row.iloc[0]["Hex Code"]
-                    pantone_number = selected_row.iloc[0]["Pantone Number"]
+        # If a record is selected, display the color picker with the corresponding color
+        if selected_record is not None:
+           color_value = selected_record['Color']
+           selected_color = st.color_picker('Select a color', color_value)
+           st.write(f'Selected Color: {selected_color}')
+        else:
+           st.write('Select a row to preview the color')
                 
-        st.write('Selected Color Preview:')
-        st.markdown(
-                    f'<div style="width: 100px; height: 50px; background-color: {color_hex}; border: 1px solid #000;"></div>',
-                    unsafe_allow_html=True
-                )
-        st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
-            # Display color previews
-        st.write('Color Previews:')
-        for index, row in edited_df.iterrows():
-              color_hex = row["Hex Code"]
-              pantone_number = row["Pantone Number"]
-              st.markdown(
-                    f'<div style="display: inline-block; width: 100px; height: 50px; background-color: {color_hex}; border: 1px solid #000; margin: 5px;"></div>',
-                    unsafe_allow_html=True
-                )
-              st.write(f'Pantone: {pantone_number} - Hex: {color_hex}')
-                
-        pantone_number = st.text_input('Enter Pantone Number:')
-        if pantone_number:
-                color_info = get_pantone_color(pantone_number)
-                if color_info:
-                    st.write('Pantone Color Information:', color_info)
-                    st.markdown(
-                        f"<div style='background-color:#{color_info['hex']};height:100px;width:100%;'></div>",
-                        unsafe_allow_html=True
-                    )
     elif option == "Customers Management":
-        st.write("PLACEHOLDER")
+           st.write("PLACEHOLDER")
     elif option == "Compare eBay and eCommerce Product Catalogs":
         file_type = st.selectbox("Select file type", ["Excel", "JSON"])
         
