@@ -393,7 +393,8 @@ def main():
                         f"<div style='background-color:#{color_info['hex']};height:100px;width:100%;'></div>",
                         unsafe_allow_html=True
                     )
-
+    elif option == "Customers Management":
+        st.write("PLACEHOLDER")
     elif option == "Compare eBay and eCommerce Product Catalogs":
         file_type = st.selectbox("Select file type", ["Excel", "JSON"])
         
