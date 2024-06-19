@@ -345,6 +345,7 @@ def main():
             os.makedirs('temp')
             
     if option == "Product Catalog Management":
+        
         st.header('Product Catalog Management')
         st.write('Select a file to load product data.')
 
@@ -362,11 +363,7 @@ def main():
          if st.button('Save Changes'):
             save_to_local(edited_df, file_path, file_extension)
             st.success('Changes saved successfully!')
-            st.write(file_path)
-            # Reload the DataFrame by reassigning it to the existing DataFrame
-            df[:] = load_dataframe(open(file_path, 'rb'))
-            st.write('Reloaded Product Data:')
-            st.dataframe(df)
+
         
     elif option == "Color Management":
         st.header('Color Management')
@@ -383,8 +380,32 @@ def main():
             ###edited_df = st.data_editor(df, num_rows="dynamic")
             #color_hex='FF6F61'
             edited_df=st.data_editor(
-    df,num_rows="dynamic"
-)
+    df,num_rows="dynamic",hide_index=None, use_container_width=True)
+    
+     # Get the selected row index
+    selected_rows = edited_df.loc[edited_df['_selected'] == True]
+    
+    if not selected_rows.empty:
+        selected_row = selected_rows.iloc[0]
+        color_value = selected_row['RGB Values']
+        
+        # Ensure the color value is valid
+        try:
+            rgb_values = [int(x) for x in color_value.strip('()').split(',')]
+            if len(rgb_values) == 3 and all(0 <= x <= 255 for x in rgb_values):
+                color_hex = '#%02x%02x%02x' % tuple(RGB Values)
+                st.write(f'Selected Color (RGB): {color_value}')
+                st.write(f'Selected Color (Hex): {color_hex}')
+                st.markdown(
+                    f'<div style="width:100px; height:100px; background-color:{color_hex};"></div>',
+                    unsafe_allow_html=True
+                )
+            else:
+                st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
+        except:
+            st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
+    else:
+        st.write('Select a row to see the color preview.')
    
         if st.button('Save Changes'):
                     with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
