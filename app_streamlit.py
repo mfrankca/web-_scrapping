@@ -362,7 +362,7 @@ def main():
          if st.button('Save Changes'):
             save_to_local(edited_df, file_path, file_extension)
             st.success('Changes saved successfully!')
-            st.write("file:{file_path}")
+            st.write(file_path)
             # Reload the DataFrame by reassigning it to the existing DataFrame
             df[:] = load_dataframe(open(file_path, 'rb'))
             st.write('Reloaded Product Data:')
