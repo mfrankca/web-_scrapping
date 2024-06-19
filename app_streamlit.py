@@ -356,23 +356,7 @@ def main():
             edited_df=st.data_editor(
     df,num_rows="dynamic"
 )
-    # Initialize session state for selected rows
-    if "selected_rows" not in df:  
-       df["selected_rows"] = []        
-            
-        # Get the selected record
-    selected_record = get_selected_record()
-   # Update selected rows in session state
-    df["selected_rows"] = df.index[df["_selected"] == True].tolist()
-    # If a record is selected, display the hex code value
-    if selected_record is not None:
-       color_value = selected_record['Color']
-       st.write(f'Selected Hex Code: {color_value}')
-    else:
-       st.write('Select a row to see the hex code value')
-    
-    
-    
+   
     if st.button('Save Changes'):
                 with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
                     edited_df.to_excel(writer, index=False)
