@@ -22,8 +22,8 @@ def compare_catalogs(file1, file2, file_type):
 
     deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
     new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
-
     return new_entries, deleted_entries
+
 # Function to save the comparison result to an Excel file
 def save_comparison_result(new_entries, deleted_entries, output_file):
     with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
@@ -196,6 +196,25 @@ def get_pantone_color(pantone_number):
        st.error("Error fetching Pantone color information.")
        return None
 
+# Function to save DataFrame to S3
+def save_to_s3(df, bucket_name, file_name, aws_access_key, aws_secret_key, file_type):
+    buffer = BytesIO()
+    if file_type == 'xlsx':
+        with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+    elif file_type == 'json':
+        df.to_json(buffer, orient='records', indent=2)
+    
+    buffer.seek(0)
+    
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=aws_access_key,
+        aws_secret_access_key=aws_secret_key
+    )
+    s3_client.upload_fileobj(buffer, bucket_name, file_name)
+    
+# Function to load DataFrame    
 def load_dataframe(uploaded_file):
     if uploaded_file.name.endswith('.json'):
         df = pd.read_json(uploaded_file)
@@ -205,6 +224,7 @@ def load_dataframe(uploaded_file):
         raise ValueError("Unsupported file format")
     return df
 
+#load logo file
 def get_base64_of_bin_file(png_file):
     with open(png_file, "rb") as f:
         data = f.read()
@@ -235,6 +255,7 @@ def build_markup_for_logo(
         image_width,
         image_height,
     )
+            
 def add_logo(png_file):
     logo_markup = build_markup_for_logo(png_file)
     st.markdown(
@@ -318,26 +339,24 @@ def main():
         st.write('Select a file to load product data.')
 
         uploaded_file = st.file_uploader("Choose a file", type=["json", "xlsx"])
-
         if uploaded_file is not None:
-                    st.write('Product Data:')
-                    df = load_dataframe(uploaded_file)
-                    edited_df = st.data_editor(df, column_config={
-        "Listing ID": st.column_config.NumberColumn(
-            "Listing ID"
-        ),
-        
-    }, num_rows="dynamic", key='product_data_editor',hide_index=None,use_container_width=True)
+           file_path = f'./{uploaded_file.name}'  # Save to the same directory with the same name
+           file_extension = uploaded_file.name.split('.')[-1]
 
-                    if st.button('Save Changes'):
-                        if file_type == 'Excel':
-                            edited_df.to_excel(file_path, index=False)
-                        elif file_type == 'JSON':
-                            edited_df.to_json(file_path, orient='records', indent=2)
-                        st.success('Changes saved successfully!')
+           st.write('Product Data:')
+           df = load_dataframe(uploaded_file)
+           edited_df = st.data_editor(df, column_config={
+            "Listing ID": st.column_config.NumberColumn("Listing ID"),
+           }, num_rows="dynamic", key='product_data_editor', hide_index=None, use_container_width=True)
 
-        #else:
-         #   st.error("Invalid directory path.")
+           if st.button('Save Changes'):
+             save_to_local(edited_df, file_path, file_extension)
+             st.success('Changes saved successfully!')
+
+             # Reload the DataFrame
+             reloaded_df = load_dataframe(open(file_path, 'rb'))
+             st.write('Reloaded Product Data:')
+             st.dataframe(reloaded_df)
         
     elif option == "Color Management":
         st.header('Color Management')
@@ -357,13 +376,12 @@ def main():
     df,num_rows="dynamic"
 )
    
-    if st.button('Save Changes'):
-                with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
-                    edited_df.to_excel(writer, index=False)
-                st.success('Changes saved successfully!')
+        if st.button('Save Changes'):
+                    with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
+                        edited_df.to_excel(writer, index=False)
+                    st.success('Changes saved successfully!')
                 
-       
-                
+                      
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
     elif option == "Compare eBay and eCommerce Product Catalogs":
