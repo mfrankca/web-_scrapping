@@ -270,6 +270,16 @@ def get_selected_record():
         selected_row_index = selected_rows[0]
         return edited_df.iloc[selected_row_index]
     return None   
+
+
+# Function to save DataFrame to a local file
+def save_to_local(df, file_path, file_type):
+    if file_type == 'xlsx':
+        df.to_excel(file_path, index=False)
+    elif file_type == 'json':
+        df.to_json(file_path, orient='records', indent=2)
+        
+        
 # Streamlit application
 def main():
     
