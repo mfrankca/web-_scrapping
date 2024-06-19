@@ -350,23 +350,23 @@ def main():
 
         uploaded_file = st.file_uploader("Choose a file", type=["json", "xlsx"])
         if uploaded_file is not None:
-           file_path = f'./{uploaded_file.name}'  # Save to the same directory with the same name
-           file_extension = uploaded_file.name.split('.')[-1]
+         file_path = f'./{uploaded_file.name}'  # Save to the same directory with the same name
+         file_extension = uploaded_file.name.split('.')[-1]
 
-           st.write('Product Data:')
-           df = load_dataframe(uploaded_file)
-           edited_df = st.data_editor(df, column_config={
+         st.write('Product Data:')
+         df = load_dataframe(uploaded_file)
+         edited_df = st.data_editor(df, column_config={
             "Listing ID": st.column_config.NumberColumn("Listing ID"),
-           }, num_rows="dynamic", key='product_data_editor', hide_index=None, use_container_width=True)
+         }, num_rows="dynamic", key='product_data_editor', hide_index=None, use_container_width=True)
 
-           if st.button('Save Changes'):
-             save_to_local(edited_df, file_path, file_extension)
-             st.success('Changes saved successfully!')
+         if st.button('Save Changes'):
+            save_to_local(edited_df, file_path, file_extension)
+            st.success('Changes saved successfully!')
 
-             # Reload the DataFrame
-             reloaded_df = load_dataframe(open(file_path, 'rb'))
-             st.write('Reloaded Product Data:')
-             st.dataframe(reloaded_df)
+            # Reload the DataFrame by reassigning it to the existing DataFrame
+            df[:] = load_dataframe(open(file_path, 'rb'))
+            st.write('Reloaded Product Data:')
+            st.dataframe(df)
         
     elif option == "Color Management":
         st.header('Color Management')
