@@ -381,6 +381,10 @@ def main():
             #color_hex='FF6F61'
             edited_df=st.data_editor(
     df,num_rows="dynamic",hide_index=None, use_container_width=True)
+            
+            # Select a row using a selectbox
+            row_options = edited_df.index.tolist()
+            selected_row_index = st.selectbox("Select a row to preview color", row_options)
     
             # Get the selected row index
             if selected_row_index is not None:
