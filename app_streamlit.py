@@ -389,7 +389,7 @@ def main():
             # Get the selected row index
             if selected_row_index is not None:
                     selected_row = edited_df.loc[selected_row_index]
-                    color_value = selected_row['RGB Color']
+                    color_value = selected_row['RGB Values']
 
                     # Ensure the color value is valid
                     try:
