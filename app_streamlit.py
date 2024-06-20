@@ -402,7 +402,7 @@ def main():
                             st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
                     except:
                         st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
-                else:
+            else:
                     st.write('Select a row to see the color preview.')
    
         if st.button('Save Changes'):
