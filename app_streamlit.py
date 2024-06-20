@@ -280,18 +280,7 @@ def save_to_local(df, file_path, file_type):
         df.to_json(file_path, orient='records', indent=2)
         
 # Function to get Pantone color details
-def get_pantone_color_details(rgb):
-    #api_url = f'https://api.pantone.com/v1/color/{rgb}'
-    #headers = {
-    #    'Authorization': 'Bearer YOUR_API_KEY'  # Replace 'YOUR_API_KEY' with your actual Pantone API key
-    #}
-    response = requests.get(f"https://connect.pantone.com//id?hex={pantone_number.lstrip('#')}")
-    #response = requests.get(api_url, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        st.error('Failed to fetch Pantone color details')
-        return None        
+
 # Streamlit application
 def main():
     
@@ -392,7 +381,7 @@ def main():
             ###edited_df = st.data_editor(df, num_rows="dynamic")
             #color_hex='FF6F61'
             edited_df=st.data_editor(
-    df,num_rows="dynamic", use_container_width=True)
+    df,num_rows="dynamic", hide_index =False, use_container_width=True)
             
             # Select a row using a selectbox
             row_options = edited_df.index.tolist()
@@ -417,14 +406,9 @@ def main():
                                 f'<div style="width:100px; height:100px; background-color:{color_hex};"></div>',
                                 unsafe_allow_html=True
                             )
-                            
-                             # Fetch Pantone color details
-                            pantone_details = get_pantone_color_details(color_hex)
-                            if pantone_details:
-                                pantone_color_name = pantone_details['color_name']
-                                pantone_color_family = pantone_details['color_family']
-                                st.write(f'Pantone Color Name: {pantone_color_name}')
-                                st.write(f'Pantone Color Family: {pantone_color_family}')
+                            if st.button('Open Color on Big Screen'):
+                                big_screen_url = f"http://localhost:8501/color_preview?color={color_hex}"
+                                webbrowser.open_new_tab(big_screen_url)
                         else:
                             st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
                     except:
