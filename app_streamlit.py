@@ -279,7 +279,19 @@ def save_to_local(df, file_path, file_type):
     elif file_type == 'json':
         df.to_json(file_path, orient='records', indent=2)
         
-        
+# Function to get Pantone color details
+def get_pantone_color_details(rgb):
+    #api_url = f'https://api.pantone.com/v1/color/{rgb}'
+    #headers = {
+    #    'Authorization': 'Bearer YOUR_API_KEY'  # Replace 'YOUR_API_KEY' with your actual Pantone API key
+    #}
+    response = requests.get(f"https://connect.pantone.com//id?hex={pantone_number.lstrip('#')}")
+    #response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error('Failed to fetch Pantone color details')
+        return None        
 # Streamlit application
 def main():
     
@@ -390,18 +402,29 @@ def main():
             if selected_row_index is not None:
                     selected_row = edited_df.loc[selected_row_index]
                     color_value = selected_row['RGB Values']
-
+                    color_name = selected_row['Color Name']
+                    color_Pantone = selected_row['Pantone Number']
                     # Ensure the color value is valid
                     try:
                         rgb_values = [int(x) for x in color_value.strip('()').split(',')]
                         if len(rgb_values) == 3 and all(0 <= x <= 255 for x in rgb_values):
                             color_hex = '#%02x%02x%02x' % tuple(rgb_values)
+                            st.write(f'Selected Color (Color Name): {color_name}')
+                            st.write(f'Selected Color (Pantone): { color_Pantone}')
                             st.write(f'Selected Color (RGB): {color_value}')
                             st.write(f'Selected Color (Hex): {color_hex}')
                             st.markdown(
                                 f'<div style="width:100px; height:100px; background-color:{color_hex};"></div>',
                                 unsafe_allow_html=True
                             )
+                            
+                             # Fetch Pantone color details
+                            pantone_details = get_pantone_color_details(color_hex)
+                            if pantone_details:
+                                pantone_color_name = pantone_details['color_name']
+                                pantone_color_family = pantone_details['color_family']
+                                st.write(f'Pantone Color Name: {pantone_color_name}')
+                                st.write(f'Pantone Color Family: {pantone_color_family}')
                         else:
                             st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
                     except:
