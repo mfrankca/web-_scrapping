@@ -403,12 +403,10 @@ def main():
                             st.write(f'Selected Color (RGB): {color_value}')
                             st.write(f'Selected Color (Hex): {color_hex}')
                             st.markdown(
-                                f'<div style="width:100px; height:100px; background-color:{color_hex};"></div>',
+                                f'<div style="width:500px; height:500px; background-color:{color_hex};"></div>',
                                 unsafe_allow_html=True
                             )
-                            if st.button('Open Color on Big Screen'):
-                                big_screen_url = f"http://localhost:8501/color_preview?color={color_hex}"
-                                webbrowser.open_new_tab(big_screen_url)
+
                         else:
                             st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
                     except:
