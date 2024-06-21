@@ -30,11 +30,16 @@ def compare_catalogs(file1, file2, file_type):
     return new_entries, deleted_entries
 
 # Function to save the comparison result to an Excel file
-def save_comparison_result(new_entries, deleted_entries, output_file):
-    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
-        new_entries.to_excel(writer, index=False, sheet_name='New Entries')
-        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
-
+#def save_comparison_result(new_entries, deleted_entries, output_file):
+#    with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+#        new_entries.to_excel(writer, index=False, sheet_name='New Entries')
+#        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
+        
+# Function to save the comparison result to CSV files
+def save_comparison_result(new_entries, deleted_entries, new_entries_file, deleted_entries_file):
+    new_entries.to_csv(new_entries_file, index=False)
+    deleted_entries.to_csv(deleted_entries_file, index=False)
+    
 # Extracted web scraping logic from ebay_scrap_new_V1.2.py
 def scrape_ebay(item):
     url = f'https://www.ebay.com/itm/{item}'
