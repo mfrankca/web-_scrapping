@@ -372,7 +372,7 @@ def main():
          st.write('Product Data:')
          df = load_dataframe(uploaded_file)
          edited_df = st.data_editor(df, column_config={
-            "Listing ID": st.column_config.NumberColumn("Listing ID"),
+            "Listing ID": st.column_config.NumberColumn("Listing ID",format="%d"),
          }, num_rows="dynamic", key='product_data_editor', hide_index=None, use_container_width=True)
 
          if st.button('Save Changes'):
