@@ -13,12 +13,17 @@ import base64
 
 # Function to compare two dataframes
 def compare_catalogs(file1, file2, file_type):
-    if file_type == 'Excel':
-        df1 = pd.read_excel(file1)
-        df2 = pd.read_excel(file2)
-    else:
-        df1 = pd.read_json(file1)
-        df2 = pd.read_json(file2)
+
+    if file1 is not None and file2 is not None:
+        if file_type == "Excel":
+            df1 = pd.read_excel(file1)
+            df2 = pd.read_excel(file2)
+        elif file_type == "JSON":
+            df1 = pd.read_json(file1)
+            df2 = pd.read_json(file2)
+        elif file_type == "CSV":
+            df1 = pd.read_csv(file1)
+            df2 = pd.read_csv(file2)
 
     deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
     new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
@@ -354,7 +359,7 @@ def main():
         st.header('Product Catalog Management')
         st.write('Select a file to load product data.')
 
-        uploaded_file = st.file_uploader("Choose a file", type=["json", "xlsx"])
+        uploaded_file = st.file_uploader("Choose a file", type=["json", "xlsx","csv"])
         if uploaded_file is not None:
          file_path = f'./{uploaded_file.name}'  # Save to the same directory with the same name
          file_extension = uploaded_file.name.split('.')[-1]
@@ -427,10 +432,10 @@ def main():
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
     elif option == "Compare eBay and eCommerce Product Catalogs":
-        file_type = st.selectbox("Select file type", ["Excel", "JSON"])
+        file_type = st.selectbox("Select file type", ["Excel", "CSV","JSON"])
         
-        file1 = st.file_uploader("Upload first file", type=['xlsx', 'json'] if file_type == 'Excel' else ['json'])
-        file2 = st.file_uploader("Upload second file", type=['xlsx', 'json'] if file_type == 'Excel' else ['json'])
+        file1 = st.file_uploader("Upload first file", type=['xlsx', 'json', 'csv'] if file_type == 'Excel' else ['json', 'csv'])
+        file2 = st.file_uploader("Upload second file", type=['xlsx', 'json', 'csv'] if file_type == 'Excel' else ['json', 'csv'])
 
         if file1 and file2:
             new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
