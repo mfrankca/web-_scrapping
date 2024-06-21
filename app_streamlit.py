@@ -164,7 +164,7 @@ def generate_output_files(data, output_format):
         output_files.append(json_file)
     if 'CSV' in output_format:
         csv_file = 'output.csv'
-        data.to_csv(csv_file, index=False)
+        df.to_csv(csv_file, index=False)
         output_files.append(csv_file) 
 
     return output_files
