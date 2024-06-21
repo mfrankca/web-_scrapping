@@ -450,7 +450,7 @@ def main():
             save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
 
             st.success(f"Comparison complete! Download the result below.")
-            st.download_button("Download comparison result", data=open(output_file, "rb").read(), file_name=output_file)
-
+            st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
+            st.download_button("Download deleted products", data=open( delete_output_file, "rb").read(), file_name= delete_output_file)
 if __name__ == "__main__":
     main()
