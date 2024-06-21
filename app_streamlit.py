@@ -154,14 +154,18 @@ def generate_output_files(data, output_format):
     output_files = []
     df = pd.DataFrame(data)
 
-    if 'Excel' in output_format or 'Both' in output_format:
+    if 'Excel' in output_format in output_format:
         excel_file = 'output.xlsx'
         df.to_excel(excel_file, index=False)
         output_files.append(excel_file)
-    if 'JSON' in output_format or 'Both' in output_format:
+    if 'JSON' in output_format in output_format:
         json_file = 'output.json'
         df.to_json(json_file, orient='records')
         output_files.append(json_file)
+    if 'CSV' in output_format in output_format:
+        csv_file = 'output.csv'
+        df.to_csv(csv_file, orient='records')
+        output_files.append(csv_file)    
 
     return output_files
 
@@ -315,7 +319,7 @@ def main():
         st.write('Upload a file with listing numbers and select the output file format.')
 
         uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
-        output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'Both'])
+        output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'CSV'])
 
         if uploaded_file is not None:
             if st.button('Scrape Data'):
