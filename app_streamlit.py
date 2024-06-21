@@ -162,10 +162,10 @@ def generate_output_files(data, output_format):
         json_file = 'output.json'
         df.to_json(json_file, orient='records')
         output_files.append(json_file)
-    if 'CSV' in output_format in output_format:
+    if 'CSV' in output_formats:
         csv_file = 'output.csv'
-        df.to_csv(csv_file, orient='records')
-        output_files.append(csv_file)    
+        data.to_csv(csv_file, index=False)
+        output_files.append(csv_file) 
 
     return output_files
 
