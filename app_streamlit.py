@@ -52,15 +52,17 @@ def scrape_ebay(item):
          row['Title'] = title_element.text.replace('Details about', '').strip() if title_element else 'Not Available'
     except AttributeError:
           row['Title'] = 'Not Available' 
-         
-    # Find the div with the class 'x-sellercard-atf__info__about-seller'
-    seller_div = soup.find('div', class_='x-sellercard-atf__info__about-seller')
+    try:     
+        # Find the div with the class 'x-sellercard-atf__info__about-seller'
+        seller_div = soup.find('div', class_='x-sellercard-atf__info__about-seller')
 
-    # Find the span with the class 'ux-textspans ux-textspans--BOLD' inside the div
-    seller_span = seller_div.find('span', class_='ux-textspans ux-textspans--BOLD')
+        # Find the span with the class 'ux-textspans ux-textspans--BOLD' inside the div
+        seller_span = seller_div.find('span', class_='ux-textspans ux-textspans--BOLD')
 
-    # Extract the seller name from the span
-    seller_name = seller_span.text.strip()
+        # Extract the seller name from the span
+        seller_name = seller_span.text.strip()   
+    except AttributeError:
+        seller_name ='Not Available'
     row['Seller'] = seller_name
     
     try:
@@ -77,7 +79,6 @@ def scrape_ebay(item):
             qty = '1'
     row['Quantity'] = qty
         
-
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
          row['Quantity'] = qty_element.find('span').text.replace('available', '').replace('More than', '').strip() if qty_element else '1'
