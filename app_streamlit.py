@@ -163,7 +163,7 @@ def perform_web_scraping(input_filepath):
 
 def generate_output_files(data, output_format):
     output_files = []
-    #df = pd.DataFrame(data)
+    df = pd.DataFrame(data)
     '''
     # Required output order of columns
     columns_order = [
@@ -181,7 +181,8 @@ def generate_output_files(data, output_format):
     'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
     # Convert the data to a DataFrame
-    df = pd.DataFrame([data], columns=columns_order)
+    #df = pd.DataFrame([data], columns=columns_order)
+    filtered_df = df[columns_order]
     st.write(df.head())
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
