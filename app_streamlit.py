@@ -133,15 +133,7 @@ def scrape_ebay(item):
     # Example of data extraction
     ####title = soup.find('h1', {'class': 'it-ttl'}).text.strip() if soup.find('h1', {'class': 'it-ttl'}) else "N/A"
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
-    '''
-    return {
-        'listing_id': item,
-        'title': title,
-        'price': price,
-        'Seller':seller_name,
-        'Quantity' :qty
-    }
-'''
+
 def perform_web_scraping(input_filepath):
     # Determine the file type and read the data accordingly
     _, file_extension = os.path.splitext(input_filepath)
@@ -167,7 +159,7 @@ def generate_output_files(data, output_format):
 
     columns_order = [
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Fabric Type' ,'Style',  'Features',   'Department',  
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style',  'Features',   'Department',  
     'Lens Socket Width',  'Bridge Width', 
     'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
