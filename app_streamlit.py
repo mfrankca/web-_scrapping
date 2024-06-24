@@ -186,15 +186,15 @@ def generate_output_files(data, output_format):
     st.write(df.head())
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
-        df.to_excel(excel_file, index=False)
+        filtered_df.to_excel(excel_file, index=False)
         output_files.append(excel_file)
     if 'JSON' in output_format :
         json_file = 'output.json'
-        df.to_json(json_file, orient='records')
+        filtered_df.to_json(json_file, orient='records')
         output_files.append(json_file)
     if 'CSV' in output_format:
         csv_file = 'output.csv'
-        df.to_csv(csv_file, index=False)
+        filtered_df.to_csv(csv_file, index=False)
         output_files.append(csv_file) 
 
     return output_files
