@@ -173,7 +173,7 @@ def generate_output_files(data, output_format):
     'Bridge Size', 'Bridge', 'Vertical', 'Lens Height', 'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
 '''
-    st.write(df.head())
+
     columns_order = [
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
     'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style',  'Features',   'Department',  
@@ -182,7 +182,7 @@ def generate_output_files(data, output_format):
 ]
     # Convert the data to a DataFrame
     df = pd.DataFrame([data], columns=columns_order)
-
+    st.write(df.head())
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
         df.to_excel(excel_file, index=False)
