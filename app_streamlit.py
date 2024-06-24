@@ -133,7 +133,7 @@ def scrape_ebay(item):
     # Example of data extraction
     ####title = soup.find('h1', {'class': 'it-ttl'}).text.strip() if soup.find('h1', {'class': 'it-ttl'}) else "N/A"
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
-    
+    '''
     return {
         'listing_id': item,
         'title': title,
@@ -141,7 +141,7 @@ def scrape_ebay(item):
         'Seller':seller_name,
         'Quantity' :qty
     }
-
+'''
 def perform_web_scraping(input_filepath):
     # Determine the file type and read the data accordingly
     _, file_extension = os.path.splitext(input_filepath)
