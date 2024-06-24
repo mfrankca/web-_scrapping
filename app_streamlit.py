@@ -46,9 +46,6 @@ def scrape_ebay(item):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     
-    
-    row = {column: None for column in columns_order}  # Initialize the row dictionary with None values
-    
     row = {'Listing ID': item}
     try:
          title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
