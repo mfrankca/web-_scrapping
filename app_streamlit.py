@@ -46,13 +46,7 @@ def scrape_ebay(item):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     
-    # Required output order of columns
-    columns_order = [
-    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Frame Shape', 'Features', 'Lens Color', 
-    'Lens Technology', 'Lens Material', 'Department', 'Lens Width', 'Lens Socket Width', 'Eye', 'Bridge Width', 
-    'Bridge Size', 'Bridge', 'Vertical', 'Lens Height', 'Temple Length', 'Country/Region of Manufacture', 'UPC'
-]
+    
     row = {column: None for column in columns_order}  # Initialize the row dictionary with None values
     
     row = {'Listing ID': item}
@@ -172,7 +166,17 @@ def perform_web_scraping(input_filepath):
 
 def generate_output_files(data, output_format):
     output_files = []
-    df = pd.DataFrame(data)
+   # df = pd.DataFrame(data)
+    
+    # Required output order of columns
+    columns_order = [
+    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Frame Shape', 'Features', 'Lens Color', 
+    'Lens Technology', 'Lens Material', 'Department', 'Lens Width', 'Lens Socket Width', 'Eye', 'Bridge Width', 
+    'Bridge Size', 'Bridge', 'Vertical', 'Lens Height', 'Temple Length', 'Country/Region of Manufacture', 'UPC'
+]
+    # Convert the data to a DataFrame
+    df = pd.DataFrame([data], columns=columns_order)
 
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
@@ -343,32 +347,36 @@ def main():
 
         if uploaded_file is not None:
             if st.button('Scrape Data'):
-                # Save uploaded file temporarily
-                input_filepath = os.path.join('temp', uploaded_file.name)
-                with open(input_filepath, 'wb') as f:
-                    f.write(uploaded_file.getbuffer())
+                # Check if an output format was chosen
+                if not output_format:
+                   st.error('Please select at least one output format before proceeding.')
+                else:
+                    # Save uploaded file temporarily
+                    input_filepath = os.path.join('temp', uploaded_file.name)
+                    with open(input_filepath, 'wb') as f:
+                        f.write(uploaded_file.getbuffer())
 
-                # Perform web scraping
-                data = perform_web_scraping(input_filepath)
+                    # Perform web scraping
+                    data = perform_web_scraping(input_filepath)
 
-                if data:
-                    # Generate output files
-                    output_files = generate_output_files(data, output_format)
+                    if data:
+                        # Generate output files
+                        output_files = generate_output_files(data, output_format)
 
-                    st.success('Scraping and file generation completed successfully!')
+                        st.success('Scraping and file generation completed successfully!')
 
-                    for file in output_files:
-                        with open(file, 'rb') as f:
-                            btn = st.download_button(
-                                label=f"Download {file}",
-                                data=f,
-                                file_name=file,
-                                mime='application/octet-stream'
-                            )
+                        for file in output_files:
+                            with open(file, 'rb') as f:
+                                btn = st.download_button(
+                                    label=f"Download {file}",
+                                    data=f,
+                                    file_name=file,
+                                    mime='application/octet-stream'
+                                )
 
-        if not os.path.exists('temp'):
-            os.makedirs('temp')
-            
+            if not os.path.exists('temp'):
+                os.makedirs('temp')
+                
     if option == "Product Catalog Management":
         
         st.header('Product Catalog Management')
