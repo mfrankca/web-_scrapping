@@ -164,13 +164,19 @@ def perform_web_scraping(input_filepath):
 def generate_output_files(data, output_format):
     output_files = []
    # df = pd.DataFrame(data)
-    
+    '''
     # Required output order of columns
     columns_order = [
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
     'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Frame Shape', 'Features', 'Lens Color', 
     'Lens Technology', 'Lens Material', 'Department', 'Lens Width', 'Lens Socket Width', 'Eye', 'Bridge Width', 
     'Bridge Size', 'Bridge', 'Vertical', 'Lens Height', 'Temple Length', 'Country/Region of Manufacture', 'UPC'
+]
+'''
+    columns_order = [
+    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style',  'Features',   'Department',  'Lens Socket Width',  'Bridge Width', 
+    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
     # Convert the data to a DataFrame
     df = pd.DataFrame([data], columns=columns_order)
