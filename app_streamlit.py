@@ -46,6 +46,15 @@ def scrape_ebay(item):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     
+    # Required output order of columns
+    columns_order = [
+    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Frame Shape', 'Features', 'Lens Color', 
+    'Lens Technology', 'Lens Material', 'Department', 'Lens Width', 'Lens Socket Width', 'Eye', 'Bridge Width', 
+    'Bridge Size', 'Bridge', 'Vertical', 'Lens Height', 'Temple Length', 'Country/Region of Manufacture', 'UPC'
+]
+    row = {column: None for column in columns_order}  # Initialize the row dictionary with None values
+    
     row = {'Listing ID': item}
     try:
          title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
