@@ -79,19 +79,7 @@ def scrape_ebay(item):
             qty = '1'
     row['Quantity'] = qty
     
-    try:
-        #Find the <div> element with the class 'd-quantity__availability evo'
-        div_element = soup.find('div', class_='d-quantity__availability evo')
-
-        #  Within this <div>, find the <span> element containing the desired text
-        if div_element:
-           span_elements = div_element.find_all('span', class_='ux-textspans ux-textspans--BOLD ux-textspans--EMPHASIS')
-           for span in span_elements:
-             if 'sold' in span.text.lower():  # Check if 'sold' is in the text (case-insensitive)
-                  sold= span.text  # Print the text of the span element
-    except AttributeError:
-            sold = '1'
-    row['Sold'] = sold
+    
         
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
@@ -175,7 +163,7 @@ def generate_output_files(data, output_format):
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
     'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style',  'Features',   'Department',  
     'Lens Socket Width',  'Bridge Width', 
-    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC','Sold'
+    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
     # Convert the data to a DataFrame
     #df = pd.DataFrame([data], columns=columns_order)
