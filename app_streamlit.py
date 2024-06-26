@@ -81,9 +81,10 @@ def scrape_ebay(item):
     
     try:
         remaining = soup.find('span', attrs={'class': 'x-textspans ux-textspans--BOLD ux-textspans--EMPHASIS'})
+        remaining=remaining.text.strip()  
     except AttributeError:
             remaining = '1'
-    row['remaining'] = remaining.text.strip()   
+    row['remaining'] = remaining
         
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
