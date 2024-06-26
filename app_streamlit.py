@@ -80,11 +80,11 @@ def scrape_ebay(item):
     row['Quantity'] = qty
     
     try:
-        remaining = soup.find('span', attrs={'class': 'x-textspans ux-textspans--BOLD ux-textspans--EMPHASIS'})
-        remaining=remaining.text.strip()  
+        sold= soup.find('span', attrs={'class': 'x-textspans ux-textspans--BOLD ux-textspans--EMPHASIS::before'})
+        sold = sold.text.strip()  
     except AttributeError:
-            remaining = '1'
-    row['remaining'] = remaining
+            sold = '1'
+    row['Sold'] = sold
         
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
@@ -173,7 +173,7 @@ def generate_output_files(data, output_format):
     # Convert the data to a DataFrame
     #df = pd.DataFrame([data], columns=columns_order)
     filtered_df = df[columns_order]
-    st.write(df.head())
+    
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
         filtered_df.to_excel(excel_file, index=False)
