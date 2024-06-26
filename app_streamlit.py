@@ -78,6 +78,12 @@ def scrape_ebay(item):
     except AttributeError:
             qty = '1'
     row['Quantity'] = qty
+    
+    try:
+        remaining = soup.find('span', attrs={'class': 'x-textspans ux-textspans--BOLD ux-textspans--EMPHASIS'})
+    except AttributeError:
+            remaining = '1'
+    row['remaining'] = remaining.text.strip()   
         
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
@@ -161,7 +167,7 @@ def generate_output_files(data, output_format):
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
     'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style',  'Features',   'Department',  
     'Lens Socket Width',  'Bridge Width', 
-    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
+    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC','remaining'
 ]
     # Convert the data to a DataFrame
     #df = pd.DataFrame([data], columns=columns_order)
