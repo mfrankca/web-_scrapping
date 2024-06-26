@@ -80,8 +80,15 @@ def scrape_ebay(item):
     row['Quantity'] = qty
     
     try:
-        sold= soup.find('span', attrs={'class': 'x-textspans ux-textspans--BOLD ux-textspans--EMPHASIS::before'})
-        sold = sold.text.strip()  
+        #Find the <div> element with the class 'd-quantity__availability evo'
+        div_element = soup.find('div', class_='d-quantity__availability evo')
+
+        #  Within this <div>, find the <span> element containing the desired text
+        if div_element:
+           span_elements = div_element.find_all('span', class_='ux-textspans ux-textspans--BOLD ux-textspans--EMPHASIS')
+           for span in span_elements:
+             if 'sold' in span.text.lower():  # Check if 'sold' is in the text (case-insensitive)
+                  sold= span.text  # Print the text of the span element
     except AttributeError:
             sold = '1'
     row['Sold'] = sold
