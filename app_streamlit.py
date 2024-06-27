@@ -194,7 +194,6 @@ def load_colors(file=None):
     # AWS S3 configuration
     BUCKET_NAME = 'sunraycolors'
     EXCEL_FILE_KEY = 'colors.xlsx'
-
     
     # Initialize S3 client
     s3_client = boto3.client(
@@ -203,7 +202,7 @@ def load_colors(file=None):
     aws_secret_access_key=aws_secret_access_key,
     region_name=aws_default_region
 )
-    #st.write("DB username:", st.secrets["aws_access_key_id"])
+  
     response = s3_client.get_object(Bucket=BUCKET_NAME, Key=EXCEL_FILE_KEY)
     df = pd.read_excel(BytesIO(response['Body'].read()))
     return df
@@ -402,12 +401,9 @@ def main():
 
         df = load_colors( EXCEL_FILE_KEY)
         if df is not None:
-            #st.write('Color Data:', df)
-
-            ###edited_df = st.data_editor(df, num_rows="dynamic")
-            #color_hex='FF6F61'
+    
             edited_df=st.data_editor(
-    df,num_rows="dynamic", hide_index =False, use_container_width=True)
+    df, num_rows="dynamic", hide_index =False, use_container_width=True)
             
             if st.button('Save Changes'):
                     with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
