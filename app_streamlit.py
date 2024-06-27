@@ -161,8 +161,8 @@ def generate_output_files(data, output_format):
 
     columns_order = [
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style',  'Features',   'Department',  
-    'Lens Socket Width',  'Bridge Width', 'Eye',
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Frame Shape', 'Features',   'Department',  
+    'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
     'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
     # Convert the data to a DataFrame
