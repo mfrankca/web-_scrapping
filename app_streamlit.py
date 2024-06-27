@@ -163,7 +163,7 @@ def generate_output_files(data, output_format):
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
     'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
     'Lens Material','Department',  
-    'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
+    'Lens Socket Width',  'Eye','Bridge Width', 'Bridge','Bridge Size',
     'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
 ]
     # Convert the data to a DataFrame
