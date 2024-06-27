@@ -401,8 +401,6 @@ def main():
 
         df = load_colors( EXCEL_FILE_KEY)
         if df is not None:
-
-            st.data_editor(df)
             edited_df=st.data_editor(
     df, num_rows="dynamic", hide_index =False, use_container_width=True)
             
