@@ -205,7 +205,7 @@ def load_colors(file=None):
 )
     #st.write("DB username:", st.secrets["aws_access_key_id"])
     response = s3_client.get_object(Bucket=BUCKET_NAME, Key=EXCEL_FILE_KEY)
-    df = pd.read_excel(BytesIO(response['Body'].read()), sheet_name='Colors')
+    df = pd.read_excel(BytesIO(response['Body'].read()))
     return df
 
 # Function to get Pantone color information
