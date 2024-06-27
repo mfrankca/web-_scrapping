@@ -9,6 +9,10 @@ import boto3
 from io import BytesIO
 import base64
 
+# Fetch environment variables
+aws_access_key_id = st.secrets["aws_access_key_id"]
+aws_secret_access_key = st.secrets["aws_secret_access_key"]
+aws_default_region = st.secrets["aws_default_region"]
 #st.set_page_config(layout="wide")
 
 # Function to compare two dataframes
@@ -191,10 +195,7 @@ def load_colors(file=None):
     BUCKET_NAME = 'sunraycolors'
     EXCEL_FILE_KEY = 'colors.xlsx'
 
-    # Fetch environment variables
-    aws_access_key_id = st.secrets["aws_access_key_id"]
-    aws_secret_access_key = st.secrets["aws_secret_access_key"]
-    aws_default_region = st.secrets["aws_default_region"]
+    
     # Initialize S3 client
     s3_client = boto3.client(
     's3',
@@ -217,7 +218,7 @@ def get_pantone_color(pantone_number):
        return None
 
 # Function to save DataFrame to S3
-def save_to_s3(df, bucket_name, file_name, aws_access_key, aws_secret_key, file_type):
+def save_to_s3(df, bucket_name, file_name, file_type):
     buffer = BytesIO()
     if file_type == 'xlsx':
         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
@@ -226,12 +227,13 @@ def save_to_s3(df, bucket_name, file_name, aws_access_key, aws_secret_key, file_
         df.to_json(buffer, orient='records', indent=2)
     
     buffer.seek(0)
-    
+    # Initialize S3 client
     s3_client = boto3.client(
-        's3',
-        aws_access_key_id=aws_access_key,
-        aws_secret_access_key=aws_secret_key
-    )
+    's3',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=aws_default_region
+)
     s3_client.upload_fileobj(buffer, bucket_name, file_name)
     
 # Function to load DataFrame    
@@ -407,6 +409,12 @@ def main():
             edited_df=st.data_editor(
     df,num_rows="dynamic", hide_index =False, use_container_width=True)
             
+            if st.button('Save Changes'):
+                    with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
+                        edited_df.to_excel(writer, index=False)
+                        save_to_s3(edited_df, BUCKET_NAME, EXCEL_FILE_KEY, 'xlsx')
+                    st.success('Changes saved successfully!')
+                    
             # Select a row using a selectbox
             row_options = edited_df.index.tolist()
             selected_row_index = st.selectbox("Select a row to preview color", row_options)
@@ -436,13 +444,7 @@ def main():
                     except:
                         st.error("Invalid RGB color value. Ensure it is in the format (R, G, B) with values between 0 and 255.")
             else:
-                    st.write('Select a row to see the color preview.')
-   
-        if st.button('Save Changes'):
-                    with pd.ExcelWriter('updated_colors.xlsx', engine='openpyxl') as writer:
-                        edited_df.to_excel(writer, index=False)
-                    st.success('Changes saved successfully!')
-                
+                    st.write('Select a row to see the color preview.')               
                       
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
