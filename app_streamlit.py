@@ -102,9 +102,7 @@ def scrape_ebay(item):
     row['Image URL 1'] = img_urls[0] if len(img_urls) > 0 else ''
     row['Image URL 2'] = img_urls[1] if len(img_urls) > 1 else ''
     row['Image URL 3'] = img_urls[2] if len(img_urls) > 2 else ''
-        
-        
-        
+             
     # Extract information from the first table
     try:
           table = soup.find('div', attrs={'id': 'viTabs_0_is'})
@@ -115,8 +113,10 @@ def scrape_ebay(item):
                 row[label.getText()] = values[nth].getText()
           else:
                 print("Table 1 not found.")
-    except Exception as e:
-           print(f"An error occurred while extracting information from Table 1: {e}")
+    except:pass
+    
+    #Exception as e:
+     #      print(f"An error occurred while extracting information from Table 1: {e}")
 
         # Extract information from the second table
     try:
