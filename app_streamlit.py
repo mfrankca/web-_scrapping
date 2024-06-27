@@ -161,7 +161,7 @@ def generate_output_files(data, output_format):
 
     columns_order = [
     'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Frame Shape','Bridge Size','Lens Color','Lens Technology',
+    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
     'Lens Material','Department',  
     'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
     'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
