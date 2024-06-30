@@ -92,6 +92,8 @@ def scrape_ebay(item):
              qty_text = qty_element.find('span').text.strip()
              if 'Last One' in qty_text:
                 row['Quantity'] = '1'
+             elif 'Out of Stock' in qty_text:
+                row['Quantity'] = '0'    
              else:
                 row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
          else:
