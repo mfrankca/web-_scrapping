@@ -85,11 +85,17 @@ def scrape_ebay(item):
             qty = '1'
     row['Quantity'] = qty
     
-    
         
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
-         row['Quantity'] = qty_element.find('span').text.replace('available', '').replace('More than', '').strip() if qty_element else '1'
+         if qty_element:
+             qty_text = qty_element.find('span').text.strip()
+             if 'Last One' in qty_text:
+                row['Quantity'] = '1'
+             else:
+                row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
+         else:
+             row['Quantity'] = '1'
     except:
         row['Quantity'] = 'Not Available'
         
