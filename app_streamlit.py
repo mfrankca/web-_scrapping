@@ -31,7 +31,14 @@ aws_default_region = st.secrets["aws_default_region"]
 #    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
 #    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
 #    return new_entries, deleted_entries
-
+def load_file(file, file_type):
+    if file_type == 'Excel':
+        return pd.read_excel(file)
+    elif file_type == 'CSV':
+        return pd.read_csv(file)
+    elif file_type == 'JSON':
+        return pd.read_json(file)
+    return None
 def compare_catalogs(file1, file2, file_type):
     df1 = load_file(file1, file_type)
     df2 = load_file(file2, file_type)
