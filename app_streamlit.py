@@ -50,16 +50,16 @@ def compare_catalogs(file1, file2, file_type):
     
     st.write("hello")
     # Set index to 'Listing ID' for easy comparison
-    df1.set_index('Listing ID', inplace=True)
-    df2.set_index('Listing ID', inplace=True)
+    #df1.set_index('Listing ID', inplace=True)
+    #df2.set_index('Listing ID', inplace=True)
     
     # Identify new and deleted entries
     deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
     new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
     
     # Compare existing entries
-    df1_common = df1[df1.index.isin(df2.index)]
-    df2_common = df2[df2.index.isin(df1.index)]
+    df1_common = df1[df1['Listing ID'].isin(df2['Listing ID'])]
+    df2_common = df2[df2['Listing ID'].isin(df1['Listing ID'])]
     
     # Find differences and add a 'variance' column
     comparison_df = df1_common.compare(df2_common)
