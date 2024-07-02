@@ -16,22 +16,51 @@ aws_default_region = st.secrets["aws_default_region"]
 #st.set_page_config(layout="wide")
 
 # Function to compare two dataframes
+#def compare_catalogs(file1, file2, file_type):
+#
+#    if file1 is not None and file2 is not None:
+#        if file_type == "Excel":
+#            df1 = pd.read_excel(file1)
+#        elif file_type == "JSON":
+#            df1 = pd.read_json(file1)
+#            df2 = pd.read_json(file2)
+#        elif file_type == "CSV":
+#            df1 = pd.read_csv(file1)
+#            df2 = pd.read_csv(file2)
+
+#    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
+#    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
+#    return new_entries, deleted_entries
+
 def compare_catalogs(file1, file2, file_type):
-
-    if file1 is not None and file2 is not None:
-        if file_type == "Excel":
-            df1 = pd.read_excel(file1)
-            df2 = pd.read_excel(file2)
-        elif file_type == "JSON":
-            df1 = pd.read_json(file1)
-            df2 = pd.read_json(file2)
-        elif file_type == "CSV":
-            df1 = pd.read_csv(file1)
-            df2 = pd.read_csv(file2)
-
-    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
-    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
-    return new_entries, deleted_entries
+    df1 = load_file(file1, file_type)
+    df2 = load_file(file2, file_type)
+    
+    # Ensure both dataframes have the same columns for comparison
+    common_columns = df1.columns.intersection(df2.columns)
+    df1 = df1[common_columns]
+    df2 = df2[common_columns]
+    
+    # Set index to 'listing_id' for easy comparison
+    df1.set_index('listing_id', inplace=True)
+    df2.set_index('listing_id', inplace=True)
+    
+    # Identify new and deleted entries
+    new_entries = df2[~df2.index.isin(df1.index)]
+    deleted_entries = df1[~df1.index.isin(df2.index)]
+    
+    # Compare existing entries
+    df1_common = df1[df1.index.isin(df2.index)]
+    df2_common = df2[df2.index.isin(df1.index)]
+    
+    # Find differences and add a 'variance' column
+    comparison_df = df1_common.compare(df2_common)
+    comparison_df['variance'] = comparison_df.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col + '_self'] != row[col + '_other']), axis=1)
+    
+    # Filter rows with differences
+    differences = comparison_df[comparison_df['variance'] != '']
+    
+    return new_entries.reset_index(), deleted_entries.reset_index(), differences.reset_index()
 
 # Function to save the comparison result to an Excel file
 #def save_comparison_result(new_entries, deleted_entries, output_file):
@@ -40,9 +69,10 @@ def compare_catalogs(file1, file2, file_type):
 #        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
         
 # Function to save the comparison result to CSV files
-def save_comparison_result(new_entries, deleted_entries, new_entries_file, deleted_entries_file):
-    new_entries.to_csv(new_entries_file, index=False)
-    deleted_entries.to_csv(deleted_entries_file, index=False)
+def save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file):
+    new_entries.to_csv(add_output_file, index=False)
+    deleted_entries.to_csv(delete_output_file, index=False)
+    differences.to_csv(diff_output_file, index=False)
     
 # Extracted web scraping logic from ebay_scrap_new_V1.2.py
 def scrape_ebay(item):
@@ -464,10 +494,15 @@ def main():
 
             add_output_file = "new_entries_result.csv"
             delete_output_file = "delete_entries_result.csv"
-            save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
+            #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
+            diff_output_file = "differences_result.csv"
+            save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
 
-            st.success(f"Comparison complete! Download the result below.")
+            st.success("Comparison complete! Download the result below.")
             st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
-            st.download_button("Download deleted products", data=open( delete_output_file, "rb").read(), file_name= delete_output_file)
+            st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
+            st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
+
+          
 if __name__ == "__main__":
     main()
