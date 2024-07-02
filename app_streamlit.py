@@ -46,8 +46,8 @@ def compare_catalogs(file1, file2, file_type):
     df2.set_index('listing_id', inplace=True)
     
     # Identify new and deleted entries
-    new_entries = df2[~df2.index.isin(df1.index)]
-    deleted_entries = df1[~df1.index.isin(df2.index)]
+    deleted_entries = df2[~df2.index.isin(df1.index)]
+    new_entries = df1[~df1.index.isin(df2.index)]
     
     # Compare existing entries
     df1_common = df1[df1.index.isin(df2.index)]
