@@ -61,12 +61,18 @@ def compare_catalogs(file1, file2, file_type):
     df1_common = df1[df1['Listing ID'].isin(df2['Listing ID'])]
     df2_common = df2[df2['Listing ID'].isin(df1['Listing ID'])]
     
+    differences = pd.DataFrame()
+    for col in common_columns:
+        if col != 'Listing ID':
+            differences[col] = df1_common[col] != df2_common[col]
+            
     # Find differences and add a 'variance' column
-    comparison_df = df1_common.compare(df2_common)
-    comparison_df['variance'] = comparison_df.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col + '_self'] != row[col + '_other']), axis=1)
+    #comparison_df = df1_common.compare(df2_common)
+    #comparison_df['variance'] = comparison_df.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col + '_self'] != row[col + '_other']), axis=1)
     
     # Filter rows with differences
-    differences = comparison_df[comparison_df['variance'] != '']
+    differences['variance'] = differences.apply(lambda row: ', '.join([col for col in differences.columns if row[col]]), axis=1)
+    differences = differences[differences['variance'] != ''].reset_index()
     
     return new_entries.reset_index(), deleted_entries.reset_index(), differences.reset_index()
 
