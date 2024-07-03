@@ -61,6 +61,10 @@ def compare_catalogs(file1, file2, file_type):
     df1_common = df1[df1['Listing ID'].isin(df2['Listing ID'])]
     df2_common = df2[df2['Listing ID'].isin(df1['Listing ID'])]
     
+    # Align indexes and columns
+    df1_common = df1_common.sort_index()
+    df2_common = df2_common.sort_index()
+    
     differences = pd.DataFrame()
     for col in common_columns:
         if col != 'Listing ID':
