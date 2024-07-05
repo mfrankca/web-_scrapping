@@ -84,24 +84,8 @@ def compare_catalogs(file1, file2, file_type):
     - deleted_entries (DataFrame): DataFrame containing the deleted entries found in file2.
     - differences (DataFrame): DataFrame containing the differences in other attributes between file1 and file2.
     """
-    df1 = load_file(file1, file_type)
-    df2 = load_file(file2, file_type)
-    
-    # Ensure both dataframes have the same columns for comparison
-    common_columns = df1.columns.intersection(df2.columns)
-    df1 = df1[common_columns]
-    df2 = df2[common_columns]
-    
-    # Check if 'Listing ID' is in both dataframes before setting it as index
-    if 'Listing ID' not in df1.columns or 'Listing ID' not in df2.columns:
-        raise ValueError("The 'Listing ID' column is missing from one or both files. Please ensure both files contain a 'Listing ID' column.")
-
-
-    # Set index to 'Listing ID' for easy comparison
-    df1.set_index('Listing ID', inplace=True)
-    df2.set_index('Listing ID', inplace=True)
-    
-    # Identify new and deleted entries
+def compare_dataframes(df1, df2, common_columns):
+    # Identify deleted and new entries based on 'Listing ID'
     deleted_entries = df2[~df2.index.isin(df1.index)]
     new_entries = df1[~df1.index.isin(df2.index)]
     
@@ -113,21 +97,34 @@ def compare_catalogs(file1, file2, file_type):
     df1_common = df1_common.sort_index()
     df2_common = df2_common.sort_index()
     
+    # Initialize an empty DataFrame for differences
     differences = pd.DataFrame()
+    
+    # Compare values in common columns, excluding 'Listing ID' since it's the index
     for col in common_columns:
-        if col != 'Listing ID':
+        if col != 'Listing ID':  # Assuming 'Listing ID' is not in common_columns since it's the index
             differences[col] = df1_common[col] != df2_common[col]
     
-    df1_reset = df1.reset_index()
-    df2_reset = df2.reset_index()
-
-    # Find differences and add a 'variance' column
-    differences['variance'] = differences.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col]), axis=1)
+    # Reset index to bring 'Listing ID' back as a column for the comparison
+    df1_common_reset = df1_common.reset_index()
+    df2_common_reset = df2_common.reset_index()
+    
+    # Add a 'variance' column to track columns with differences
+    differences['variance'] = differences.apply(lambda row: ', '.join(col for col in common_columns if row[col]), axis=1)
     
     # Filter rows with differences
-    differences = differences[differences['variance'] != ''].reset_index()
+    differences = differences[differences['variance'] != '']
     
-    return new_entries.reset_index(), deleted_entries.reset_index(), differences.reset_index()
+    # Add 'Listing ID' from df1_common_reset to differences DataFrame
+    differences['Listing ID'] = df1_common_reset['Listing ID']
+    
+    # Reorder columns to have 'Listing ID' at the front if needed
+    cols = ['Listing ID'] + [col for col in differences.columns if col != 'Listing ID']
+    differences = differences[cols]
+    
+    # Return the new, deleted, and differences DataFrames, resetting index for new and deleted to include 'Listing ID'
+    return new_entries.reset_index(), deleted_entries.reset_index(), differences
+
 
 # Function to save the comparison result to an Excel file
 #def save_comparison_result(new_entries, deleted_entries, output_file):
