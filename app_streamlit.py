@@ -92,6 +92,11 @@ def compare_catalogs(file1, file2, file_type):
     df1 = df1[common_columns]
     df2 = df2[common_columns]
     
+    # Check if 'Listing ID' is in both dataframes before setting it as index
+    if 'Listing ID' not in df1.columns or 'Listing ID' not in df2.columns:
+        raise ValueError("The 'Listing ID' column is missing from one or both files. Please ensure both files contain a 'Listing ID' column.")
+
+
     # Set index to 'Listing ID' for easy comparison
     df1.set_index('Listing ID', inplace=True)
     df2.set_index('Listing ID', inplace=True)
