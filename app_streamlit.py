@@ -109,19 +109,23 @@ def compare_dataframes(df1, df2, common_columns):
     df1_common_reset = df1_common.reset_index()
     df2_common_reset = df2_common.reset_index()
     
-    # Add a 'variance' column to track columns with differences
-    differences['variance'] = differences.apply(lambda row: ', '.join(col for col in common_columns if row[col]), axis=1)
-    
-    # Filter rows with differences
-    differences = differences[differences['variance'] != '']
-    
-    # Add 'Listing ID' from df1_common_reset to differences DataFrame
-    differences['Listing ID'] = df1_common_reset['Listing ID']
-    
-    # Reorder columns to have 'Listing ID' at the front if needed
-    cols = ['Listing ID'] + [col for col in differences.columns if col != 'Listing ID']
-    differences = differences[cols]
-    
+    try:
+        # Add a 'variance' column to track columns with differences
+        differences['variance'] = differences.apply(lambda row: ', '.join(col for col in common_columns if row[col]), axis=1)
+        
+        # Filter rows with differences
+        differences = differences[differences['variance'] != '']
+        
+        # Add 'Listing ID' from df1_common_reset to differences DataFrame
+        differences['Listing ID'] = df1_common_reset['Listing ID']
+        
+        # Reorder columns to have 'Listing ID' at the front if needed
+        cols = ['Listing ID'] + [col for col in differences.columns if col != 'Listing ID']
+        differences = differences[cols]
+        
+    except Exception as e:
+          print(f"An error occurred while retrieving image URLs: {e}")
+        
     # Return the new, deleted, and differences DataFrames, resetting index for new and deleted to include 'Listing ID'
     return new_entries.reset_index(), deleted_entries.reset_index(), differences
 
