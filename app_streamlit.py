@@ -118,13 +118,16 @@ def compare_catalogs(file1, file2, file_type):
         if col != 'Listing ID':
             differences[col] = df1_common[col] != df2_common[col]
     
+    df1_reset = df1.reset_index()
+    df2_reset = df2.reset_index()
+
     # Find differences and add a 'variance' column
     differences['variance'] = differences.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col]), axis=1)
     
     # Filter rows with differences
     differences = differences[differences['variance'] != ''].reset_index()
     
-    return new_entries.reset_index(), deleted_entries.reset_index(), differences
+    return new_entries.reset_index(), deleted_entries.reset_index(), differences.reset_index()
 
 # Function to save the comparison result to an Excel file
 #def save_comparison_result(new_entries, deleted_entries, output_file):
