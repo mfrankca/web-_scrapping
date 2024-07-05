@@ -133,12 +133,12 @@ def compare_catalogs(file1, file2, file_type):
 #        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
         
 # Function to save the comparison result to CSV files
-#def save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file):
-def save_comparison_result(new_entries, deleted_entries,  add_output_file, delete_output_file):
-    new_entries.to_csv(add_output_file, index=False)  
+def save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file):
+#def save_comparison_result(new_entries, deleted_entries,  add_output_file, delete_output_file):
+
     new_entries.to_csv(add_output_file, index=False)
     deleted_entries.to_csv(delete_output_file, index=False)
-    #differences.to_csv(diff_output_file, index=False)
+    differences.to_csv(diff_output_file, index=False)
     
 # Extracted web scraping logic from ebay_scrap_new_V1.2.py
 def scrape_ebay(item):
