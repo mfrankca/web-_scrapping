@@ -31,6 +31,36 @@ aws_default_region = st.secrets["aws_default_region"]
 #    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
 #    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
 #    return new_entries, deleted_entries
+
+def upload_file_ui():
+    """
+    Streamlit UI component for uploading a file.
+    Supports Excel and CSV file formats.
+    Returns a pandas DataFrame if a file is successfully uploaded and None otherwise.
+    """
+    # Allow user to select the file type
+    file_type = st.selectbox("Select file type", ["Excel", "CSV"])
+    
+    # Define the allowed file types for the uploader based on the user's selection
+    allowed_types = ["xlsx", "xls"] if file_type == "Excel" else ["csv"]
+    
+    # Create a file uploader widget
+    uploaded_file = st.file_uploader("Upload your file", type=allowed_types)
+    
+    if uploaded_file is not None:
+        # Load the file into a pandas DataFrame based on the file type
+        if file_type == "Excel":
+            df = pd.read_excel(uploaded_file)
+        else:  # CSV
+            df = pd.read_csv(uploaded_file)
+        
+        # Return the loaded DataFrame
+        return df
+    else:
+        # Return None if no file is uploaded
+        return None
+    
+    
 def load_file(file, file_type):
     if file_type == 'Excel':
         return pd.read_excel(file)
@@ -504,6 +534,8 @@ def main():
                       
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
+           df = upload_file_ui()
+           edited_df = st.data_editor(df, num_rows="dynamic", key='customers_data_editor', use_container_width=True)
     elif option == "Compare eBay and eCommerce Product Catalogs":
         file_type = st.selectbox("Select file type", ["Excel", "CSV","JSON"])
         
