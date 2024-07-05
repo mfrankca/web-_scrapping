@@ -119,10 +119,10 @@ def compare_catalogs(file1, file2, file_type):
             differences[col] = df1_common[col] != df2_common[col]
     
     # Find differences and add a 'variance' column
-    differences['variance'] = differences.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col]), axis=1)
+    ##differences['variance'] = differences.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col]), axis=1)
     
     # Filter rows with differences
-    differences = differences[differences['variance'] != ''].reset_index()
+   ## differences = differences[differences['variance'] != ''].reset_index()
     
     return new_entries.reset_index(), deleted_entries.reset_index(), differences
 
