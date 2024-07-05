@@ -39,6 +39,7 @@ def load_file(file, file_type):
     elif file_type == 'JSON':
         return pd.read_json(file)
     return None
+
 def compare_catalogs(file1, file2, file_type):
     df1 = load_file(file1, file_type)
     df2 = load_file(file2, file_type)
@@ -56,7 +57,7 @@ def compare_catalogs(file1, file2, file_type):
     # Identify new and deleted entries
     deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
     new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
-    
+    '''
     # Compare existing entries
     df1_common = df1[df1['Listing ID'].isin(df2['Listing ID'])]
     df2_common = df2[df2['Listing ID'].isin(df1['Listing ID'])]
@@ -77,8 +78,8 @@ def compare_catalogs(file1, file2, file_type):
     # Filter rows with differences
     differences['variance'] = differences.apply(lambda row: ', '.join([col for col in differences.columns if row[col]]), axis=1)
     differences = differences[differences['variance'] != ''].reset_index()
-    
-    return new_entries.reset_index(), deleted_entries.reset_index(), differences.reset_index()
+    '''
+    return new_entries.reset_index(), deleted_entries.reset_index()#, differences.reset_index()
 
 # Function to save the comparison result to an Excel file
 #def save_comparison_result(new_entries, deleted_entries, output_file):
@@ -87,10 +88,12 @@ def compare_catalogs(file1, file2, file_type):
 #        deleted_entries.to_excel(writer, index=False, sheet_name='Deleted Entries')
         
 # Function to save the comparison result to CSV files
-def save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file):
+#def save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file):
+def save_comparison_result(new_entries, deleted_entries,  add_output_file, delete_output_file):
+    new_entries.to_csv(add_output_file, index=False)  
     new_entries.to_csv(add_output_file, index=False)
     deleted_entries.to_csv(delete_output_file, index=False)
-    differences.to_csv(diff_output_file, index=False)
+    #differences.to_csv(diff_output_file, index=False)
     
 # Extracted web scraping logic from ebay_scrap_new_V1.2.py
 def scrape_ebay(item):
@@ -508,18 +511,18 @@ def main():
         file2 = st.file_uploader("Upload second file", type=['xlsx', 'json', 'csv'] if file_type == 'Excel' else ['json', 'csv'])
 
         if file1 and file2:
-            new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
-
+           # new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
+            new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
             add_output_file = "new_entries_result.csv"
             delete_output_file = "delete_entries_result.csv"
             #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
             diff_output_file = "differences_result.csv"
-            save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
-
+            #save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
+            save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
             st.success("Comparison complete! Download the result below.")
             st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
             st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
-            st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
+            #st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
 
           
 if __name__ == "__main__":
