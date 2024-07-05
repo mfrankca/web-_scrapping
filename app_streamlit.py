@@ -534,7 +534,7 @@ def main():
                       
     elif option == "Customers Management":
            st.write("PLACEHOLDER")
-           uploaded_file = st.file_uploader('Choose a file', type=['Excel', 'JSON', 'CSV'])
+          # uploaded_file = st.file_uploader('Choose a file', type=['Excel', 'JSON', 'CSV'])
           
            df = upload_file_ui()
            edited_df = st.data_editor(df, num_rows="dynamic", key='customers_data_editor', use_container_width=True)
