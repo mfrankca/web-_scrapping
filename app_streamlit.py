@@ -71,6 +71,19 @@ def load_file(file, file_type):
     return None
 
 def compare_catalogs(file1, file2, file_type):
+    """
+    Compare two catalogs and identify new and deleted entries.
+
+    Parameters:
+    - file1 (str): Path to the first catalog file.
+    - file2 (str): Path to the second catalog file.
+    - file_type (str): Type of the catalog file (e.g., CSV, Excel).
+
+    Returns:
+    - new_entries (DataFrame): DataFrame containing the new entries found in file1.
+    - deleted_entries (DataFrame): DataFrame containing the deleted entries found in file2.
+    - differences (DataFrame): DataFrame containing the differences in other attributes between file1 and file2.
+    """
     df1 = load_file(file1, file_type)
     df2 = load_file(file2, file_type)
     
@@ -79,18 +92,17 @@ def compare_catalogs(file1, file2, file_type):
     df1 = df1[common_columns]
     df2 = df2[common_columns]
     
-    st.write("hello")
     # Set index to 'Listing ID' for easy comparison
-    #df1.set_index('Listing ID', inplace=True)
-    #df2.set_index('Listing ID', inplace=True)
+    df1.set_index('Listing ID', inplace=True)
+    df2.set_index('Listing ID', inplace=True)
     
     # Identify new and deleted entries
-    deleted_entries= df2[~df2['Listing ID'].isin(df1['Listing ID'])]
-    new_entries  = df1[~df1['Listing ID'].isin(df2['Listing ID'])]
-    '''
+    deleted_entries = df2[~df2.index.isin(df1.index)]
+    new_entries = df1[~df1.index.isin(df2.index)]
+    
     # Compare existing entries
-    df1_common = df1[df1['Listing ID'].isin(df2['Listing ID'])]
-    df2_common = df2[df2['Listing ID'].isin(df1['Listing ID'])]
+    df1_common = df1[df1.index.isin(df2.index)]
+    df2_common = df2[df2.index.isin(df1.index)]
     
     # Align indexes and columns
     df1_common = df1_common.sort_index()
@@ -100,16 +112,14 @@ def compare_catalogs(file1, file2, file_type):
     for col in common_columns:
         if col != 'Listing ID':
             differences[col] = df1_common[col] != df2_common[col]
-            
+    
     # Find differences and add a 'variance' column
-    #comparison_df = df1_common.compare(df2_common)
-    #comparison_df['variance'] = comparison_df.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col + '_self'] != row[col + '_other']), axis=1)
+    differences['variance'] = differences.apply(lambda row: ', '.join(f'{col}' for col in common_columns if row[col]), axis=1)
     
     # Filter rows with differences
-    differences['variance'] = differences.apply(lambda row: ', '.join([col for col in differences.columns if row[col]]), axis=1)
     differences = differences[differences['variance'] != ''].reset_index()
-    '''
-    return new_entries.reset_index(), deleted_entries.reset_index()#, differences.reset_index()
+    
+    return new_entries.reset_index(), deleted_entries.reset_index(), differences
 
 # Function to save the comparison result to an Excel file
 #def save_comparison_result(new_entries, deleted_entries, output_file):
@@ -551,12 +561,12 @@ def main():
             delete_output_file = "delete_entries_result.csv"
             #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
             diff_output_file = "differences_result.csv"
-            #save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
-            save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
+            save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
+            #save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
             st.success("Comparison complete! Download the result below.")
             st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
             st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
-            #st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
+            st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
 
           
 if __name__ == "__main__":
