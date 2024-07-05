@@ -560,8 +560,8 @@ def main():
         file2 = st.file_uploader("Upload second file", type=['xlsx', 'json', 'csv'] if file_type == 'Excel' else ['json', 'csv'])
 
         if file1 and file2:
-           # new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
-            new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
+            new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
+            #new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
             add_output_file = "new_entries_result.csv"
             delete_output_file = "delete_entries_result.csv"
             #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
