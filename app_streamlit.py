@@ -84,7 +84,16 @@ def compare_catalogs(file1, file2, file_type):
     - deleted_entries (DataFrame): DataFrame containing the deleted entries found in file2.
     - differences (DataFrame): DataFrame containing the differences in other attributes between file1 and file2.
     """
-def compare_dataframes(df1, df2, common_columns):
+def compare_dataframes(file1, file2, file_type):
+
+    if file1 and file2:
+        # Step 2: File Handling and Comparison
+        if file_type == 'csv':
+            df1 = pd.read_csv(file1)
+            df2 = pd.read_csv(file2)
+        else:
+            df1 = pd.read_excel(file1)
+            df2 = pd.read_excel(file2)
     # Identify deleted and new entries based on 'Listing ID'
     deleted_entries = df2[~df2.index.isin(df1.index)]
     new_entries = df1[~df1.index.isin(df2.index)]
@@ -100,31 +109,23 @@ def compare_dataframes(df1, df2, common_columns):
     # Initialize an empty DataFrame for differences
     differences = pd.DataFrame()
     
-    # Compare values in common columns, excluding 'Listing ID' since it's the index
-    for col in common_columns:
-        if col != 'Listing ID':  # Assuming 'Listing ID' is not in common_columns since it's the index
-            differences[col] = df1_common[col] != df2_common[col]
-    
-    # Reset index to bring 'Listing ID' back as a column for the comparison
-    df1_common_reset = df1_common.reset_index()
-    df2_common_reset = df2_common.reset_index()
-    
-    try:
-        # Add a 'variance' column to track columns with differences
-        differences['variance'] = differences.apply(lambda row: ', '.join(col for col in common_columns if row[col]), axis=1)
-        
-        # Filter rows with differences
-        differences = differences[differences['variance'] != '']
-        
-        # Add 'Listing ID' from df1_common_reset to differences DataFrame
-        differences['Listing ID'] = df1_common_reset['Listing ID']
-        
-        # Reorder columns to have 'Listing ID' at the front if needed
-        cols = ['Listing ID'] + [col for col in differences.columns if col != 'Listing ID']
-        differences = differences[cols]
-        
-    except Exception as e:
-          print(f"An error occurred while retrieving image URLs: {e}")
+    # Ensure both DataFrames have the Listing ID column
+    if 'Listing ID' in df1.columns and 'Listing ID' in df2.columns:
+            merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
+            
+            # Step 3: Output the Differences
+            diff_df = pd.DataFrame(columns=merged_df.columns.tolist() + ['Differences'])
+            
+            for index, row in merged_df.iterrows():
+                differences = []
+                for col in df1.columns:
+                    if col != 'Listing ID' and row[f'{col}_file1'] != row[f'{col}_file2']:
+                        differences.append(col)
+                if differences:
+                    diff_df = diff_df.append(row, ignore_index=True)
+                    diff_df.at[index, 'Differences'] = ', '.join(differences)      
+    #except Exception as e:
+     #     print(f"An error occurred while retrieving image URLs: {e}")
         
     # Return the new, deleted, and differences DataFrames, resetting index for new and deleted to include 'Listing ID'
     return new_entries.reset_index(), deleted_entries.reset_index(), differences
