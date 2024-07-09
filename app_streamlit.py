@@ -576,6 +576,7 @@ def main():
             new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
             add_output_file = "new_entries_result.csv"
             delete_output_file = "delete_entries_result.csv"
+            diff_output_file = "differences_result.csv"
             save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
             st.success("Comparison complete! Download the result below.")
             st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
