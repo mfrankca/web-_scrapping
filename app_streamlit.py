@@ -574,17 +574,16 @@ def main():
 
         if file1 and file2:
             new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
+            add_output_file = "new_entries_result.csv"
+            delete_output_file = "delete_entries_result.csv"
+            st.success("Comparison complete! Download the result below.")
+            st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
+            st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
             if differences is not None and not differences.empty:
-                #new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
-                add_output_file = "new_entries_result.csv"
-                delete_output_file = "delete_entries_result.csv"
-                #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
                 diff_output_file = "differences_result.csv"
                 save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
                 #save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
-                st.success("Comparison complete! Download the result below.")
-                st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
-                st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
+                
                 st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
             elif differences is not None and differences.empty:
                 st.write('No differences found.')
