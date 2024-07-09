@@ -90,7 +90,7 @@ def compare_catalogs(file1, file2, file_type):
         # Step 2: File Handling and Comparison
         st.write(file_type)
     
-        if file_type == 'csv':
+        if file_type == 'CSV':
             df1 = pd.read_csv(file1)
             df2 = pd.read_csv(file2)
         else:
