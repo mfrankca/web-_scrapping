@@ -111,10 +111,10 @@ def compare_catalogs(file1, file2, file_type):
     # Initialize an empty DataFrame for differences
     differences = pd.DataFrame()
     
-    # Ensure both DataFrames have the Listing ID column
-    if 'Listing ID' in df1.columns and 'Listing ID' in df2.columns:
-            merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
-            
+    if 'Listing ID' not in df1.columns or 'Listing ID' not in df2.columns:
+        st.error('Both files must contain the "Listing ID" column')
+        return None
+
     merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
     diff_df = pd.DataFrame(columns=merged_df.columns.tolist() + ['Differences'])
     for index, row in merged_df.iterrows():
