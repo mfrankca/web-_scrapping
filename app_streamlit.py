@@ -125,12 +125,17 @@ def compare_catalogs(file1, file2, file_type):
         if differences:
             diff_row = row.to_dict()
             diff_row['Differences'] = ', '.join(differences)
-            diff_df = diff_df.append(diff_row, ignore_index=True)    
+            diff_df = diff_df.append(diff_row, ignore_index=True)  
+
+    # Create a DataFrame from the list of rows with differences
+    diff_df = pd.DataFrame(diff_rows)
+
+  
     #except Exception as e:
      #     print(f"An error occurred while retrieving image URLs: {e}")
         
     # Return the new, deleted, and differences DataFrames, resetting index for new and deleted to include 'Listing ID'
-    return new_entries.reset_index(), deleted_entries.reset_index(), differences
+    return new_entries.reset_index(), deleted_entries.reset_index(), diff_df
 
 
 # Function to save the comparison result to an Excel file
@@ -568,18 +573,20 @@ def main():
 
         if file1 and file2:
             new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
-            #new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
-            add_output_file = "new_entries_result.csv"
-            delete_output_file = "delete_entries_result.csv"
-            #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
-            diff_output_file = "differences_result.csv"
-            save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
-            #save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
-            st.success("Comparison complete! Download the result below.")
-            st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
-            st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
-            st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
-
+            if diff_df is not None and not diff_df.empty:
+                #new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
+                add_output_file = "new_entries_result.csv"
+                delete_output_file = "delete_entries_result.csv"
+                #save_comparison_result(new_entries, deleted_entries, add_output_file,delete_output_file)
+                diff_output_file = "differences_result.csv"
+                save_comparison_result(new_entries, deleted_entries, differences, add_output_file, delete_output_file, diff_output_file)
+                #save_comparison_result(new_entries, deleted_entries, add_output_file, delete_output_file)
+                st.success("Comparison complete! Download the result below.")
+                st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
+                st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
+                st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
+            elif diff_df is not None and diff_df.empty:
+                st.write('No differences found.')
           
 if __name__ == "__main__":
     main()
