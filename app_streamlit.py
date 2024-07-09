@@ -113,17 +113,17 @@ def compare_dataframes(file1, file2, file_type):
     if 'Listing ID' in df1.columns and 'Listing ID' in df2.columns:
             merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
             
-            # Step 3: Output the Differences
-            diff_df = pd.DataFrame(columns=merged_df.columns.tolist() + ['Differences'])
-            
-            for index, row in merged_df.iterrows():
-                differences = []
-                for col in df1.columns:
-                    if col != 'Listing ID' and row[f'{col}_file1'] != row[f'{col}_file2']:
-                        differences.append(col)
-                if differences:
-                    diff_df = diff_df.append(row, ignore_index=True)
-                    diff_df.at[index, 'Differences'] = ', '.join(differences)      
+    merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
+    diff_df = pd.DataFrame(columns=merged_df.columns.tolist() + ['Differences'])
+    for index, row in merged_df.iterrows():
+        differences = []
+        for col in df1.columns:
+            if col != 'Listing ID' and row[f'{col}_file1'] != row[f'{col}_file2']:
+                differences.append(col)
+        if differences:
+            diff_row = row.to_dict()
+            diff_row['Differences'] = ', '.join(differences)
+            diff_df = diff_df.append(diff_row, ignore_index=True)    
     #except Exception as e:
      #     print(f"An error occurred while retrieving image URLs: {e}")
         
