@@ -574,7 +574,7 @@ def main():
 
         if file1 and file2:
             new_entries, deleted_entries, differences = compare_catalogs(file1, file2, file_type)
-            if diff_df is not None and not diff_df.empty:
+            if differences is not None and not diff_df.empty:
                 #new_entries, deleted_entries = compare_catalogs(file1, file2, file_type)
                 add_output_file = "new_entries_result.csv"
                 delete_output_file = "delete_entries_result.csv"
@@ -586,7 +586,7 @@ def main():
                 st.download_button("Download added products", data=open(add_output_file, "rb").read(), file_name=add_output_file)
                 st.download_button("Download deleted products", data=open(delete_output_file, "rb").read(), file_name=delete_output_file)
                 st.download_button("Download differences", data=open(diff_output_file, "rb").read(), file_name=diff_output_file)
-            elif diff_df is not None and diff_df.empty:
+            elif diff_df is not None and differences.empty:
                 st.write('No differences found.')
           
 if __name__ == "__main__":
