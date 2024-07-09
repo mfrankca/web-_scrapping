@@ -70,7 +70,7 @@ def load_file(file, file_type):
         return pd.read_json(file)
     return None
 
-def compare_catalogs(file1, file2, file_type):
+#def compare_catalogs(file1, file2, file_type):
     """
     Compare two catalogs and identify new and deleted entries.
 
@@ -84,7 +84,7 @@ def compare_catalogs(file1, file2, file_type):
     - deleted_entries (DataFrame): DataFrame containing the deleted entries found in file2.
     - differences (DataFrame): DataFrame containing the differences in other attributes between file1 and file2.
     """
-def compare_dataframes(file1, file2, file_type):
+def compare_catalogs(file1, file2, file_type):
 
     if file1 and file2:
         # Step 2: File Handling and Comparison
