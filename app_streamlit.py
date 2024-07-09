@@ -116,7 +116,7 @@ def compare_catalogs(file1, file2, file_type):
         return None
 
     merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
-    diff_df = pd.DataFrame(columns=merged_df.columns.tolist() + ['Differences'])
+    diff_rows = []
     for index, row in merged_df.iterrows():
         differences = []
         for col in df1.columns:
@@ -125,7 +125,8 @@ def compare_catalogs(file1, file2, file_type):
         if differences:
             diff_row = row.to_dict()
             diff_row['Differences'] = ', '.join(differences)
-            diff_df = diff_df.append(diff_row, ignore_index=True)  
+            diff_rows.concat(diff_row)
+    diff_df = pd.DataFrame(diff_rows, columns=merged_df.columns.tolist() + ['Differences'])
 
     # Create a DataFrame from the list of rows with differences
     diff_df = pd.DataFrame(diff_rows)
