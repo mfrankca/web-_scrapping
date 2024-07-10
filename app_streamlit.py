@@ -128,7 +128,7 @@ def compare_catalogs(file1, file2, file_type):
             diff_rows.append(diff_row)
    # Create a DataFrame from the list of rows with differences
     diff_df = pd.DataFrame(diff_rows)
-    st.write(ddiff_df.head())
+    st.write(diff_df.head())
   
     #except Exception as e:
      #     print(f"An error occurred while retrieving image URLs: {e}")
