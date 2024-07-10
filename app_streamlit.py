@@ -115,8 +115,11 @@ def compare_catalogs(file1, file2, file_type):
         st.error('Both files must contain the "Listing ID" column')
         return None
 
-     # Merge DataFrames on 'Listing ID'
+      # Merge DataFrames on 'Listing ID'
     merged_df = pd.merge(df1, df2, on='Listing ID', suffixes=('_file1', '_file2'))
+
+    # Debug: Display column names after merge
+    st.write("Merged DataFrame Columns:", merged_df.columns)
 
     # Initialize list to collect rows with differences
     diff_rows = []
@@ -126,11 +129,14 @@ def compare_catalogs(file1, file2, file_type):
         differences = []
         diff_row = {'Listing ID': row['Listing ID']}
         for col in df1.columns:
-            if col != 'Listing ID' and row[f'{col}_file1'] != row[f'{col}_file2']:
-                differences.append(col)
-                diff_row[col] = f"{row[f'{col}_file1']} != {row[f'{col}_file2']}"
-            else:
-                diff_row[col] = row[f'{col}_file1']
+            if col != 'Listing ID':
+                col_file1 = f'{col}_file1'
+                col_file2 = f'{col}_file2'
+                if row[col_file1] != row[col_file2]:
+                    differences.append(col)
+                    diff_row[col] = f"{row[col_file1]} != {row[col_file2]}"
+                else:
+                    diff_row[col] = row[col_file1]
         if differences:
             diff_row['Differences'] = ', '.join(differences)
             diff_rows.append(diff_row)
