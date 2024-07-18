@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import requests
@@ -152,6 +153,14 @@ def scrape_ebay(item):
     ####title = soup.find('h1', {'class': 'it-ttl'}).text.strip() if soup.find('h1', {'class': 'it-ttl'}) else "N/A"
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
     
+    return {
+        'listing_id': item,
+        'title': title,
+        'price': price,
+        'Seller':seller_name,
+        'Quantity' :qty
+    }
+
 def perform_web_scraping(input_filepath):
     # Determine the file type and read the data accordingly
     _, file_extension = os.path.splitext(input_filepath)
@@ -201,47 +210,36 @@ def generate_output_files(data, output_format):
 
     return output_files
 
-    
-image_path = "uploads//logo.png"
-st.sidebar.image(image_path, use_column_width=True)
-st.title("Welcome to SunRayCity Managment")
-
-st.header('Web Scraping App')
+st.title('Web Scraping App')
 st.write('Upload a file with listing numbers and select the output file format.')
 
 uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
-output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'CSV'])
+output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'Both'])
 
 if uploaded_file is not None:
     if st.button('Scrape Data'):
-    # Check if an output format was chosen
-      if not output_format:
-          st.error('Please select at least one output format before proceeding.')
-      else:
-            # Save uploaded file temporarily
-            input_filepath = os.path.join('temp', uploaded_file.name)
-            with open(input_filepath, 'wb') as f:
-                f.write(uploaded_file.getbuffer())
+        # Save uploaded file temporarily
+        input_filepath = os.path.join('temp', uploaded_file.name)
+        with open(input_filepath, 'wb') as f:
+            f.write(uploaded_file.getbuffer())
 
-            # Perform web scraping
-            data = perform_web_scraping(input_filepath)
+        # Perform web scraping
+        data = perform_web_scraping(input_filepath)
 
-            if data:
-                # Generate output files
-                output_files = generate_output_files(data, output_format)
+        if data:
+            # Generate output files
+            output_files = generate_output_files(data, output_format)
 
-                st.success('Scraping and file generation completed successfully!')
+            st.success('Scraping and file generation completed successfully!')
 
-                for file in output_files:
-                    with open(file, 'rb') as f:
-                        btn = st.download_button(
-                            label=f"Download {file}",
-                            data=f,
-                            file_name=file,
-                            mime='application/octet-stream'
-                        )
+            for file in output_files:
+                with open(file, 'rb') as f:
+                    btn = st.download_button(
+                        label=f"Download {file}",
+                        data=f,
+                        file_name=file,
+                        mime='application/octet-stream'
+                    )
 
-    if not os.path.exists('temp'):
-        os.makedirs('temp')
-
-       
+if not os.path.exists('temp'):
+    os.makedirs('temp')
