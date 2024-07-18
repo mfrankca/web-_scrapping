@@ -7,7 +7,7 @@ import os
 import boto3
 from io import BytesIO
 import base64
-from utility_functions import get_base64_of_bin_file, build_markup_for_logo, add_logo
+
 
 image_path = "uploads//logo.png"
 st.sidebar.image(image_path, use_column_width=True)
