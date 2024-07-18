@@ -7,7 +7,7 @@ import os
 import boto3
 from io import BytesIO
 import base64
-from utility_functions import get_base64_of_bin_file, build_markup_for_logo, add_logo
+
 def upload_file_ui():
     """
     Streamlit UI component for uploading a file.
