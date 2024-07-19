@@ -10,9 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import re
 
 # Configuration from Streamlit secrets
-ebay_feedback_site1 = st.secrets["ebay_feedback_site1"]
-ebay_feedback_site2 = st.secrets["ebay_feedback_site2"]
-
+ebay_feedback_site1 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST"
+ebay_feedback_site2 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity_store?sort=NEWEST"
 # Set up the Streamlit page
 st.set_page_config(page_title='Ebay Reviews', page_icon='🎉')
 st.title('Ebay Reviews')
@@ -130,7 +129,7 @@ def display_sidebar():
     
     st.sidebar.header('Documentation')
     st.sidebar.write("""
-    **Ebay Reviews** is a web application built with Streamlit to scrape and manage eBay reviews. 
+    **Ebay Reviews** is a web application built to manage Eyeware ecommerce store.
 
     ### Features:
     - **Web Scraping**: Scrape reviews from eBay feedback pages.
