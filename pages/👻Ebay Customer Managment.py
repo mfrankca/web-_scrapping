@@ -41,7 +41,7 @@ def display_sidebar():
     # Documentation section in the sidebar
     st.sidebar.header('Documentation')
     st.sidebar.write("""
-    **SunRayCity Management** is a web application built with Streamlit to manage product catalog data. 
+    **SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
     
     ### Features:
     - **File Upload**: Upload product data in Excel or CSV format.
