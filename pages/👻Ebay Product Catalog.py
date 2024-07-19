@@ -69,7 +69,7 @@ if uploaded_file is not None:
 # Documentation
 st.sidebar.header('Documentation')
 st.sidebar.write("""
-**SunRayCity Management** is a web application built with Streamlit to manage product catalog data. 
+**SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
 
 ### Features:
 - **File Upload**: Upload product data in JSON or Excel format.
