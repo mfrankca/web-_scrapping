@@ -52,17 +52,16 @@ def get_ebay_reviews(store_url, max_entries=200):
         list of dict: A list of dictionaries containing review data.
     """
     driver = webdriver.Chrome()
+    #driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
     driver.get(store_url)
     
     feedbacks = []
     seen_feedback_ids = set()  # To track feedback IDs and avoid duplicates
-    
+    #Wait for items per page button and click to set to 200
+    #WebDriverWait(driver, 10).until(
+    ###time.sleep(5)  # Wait for the page to reload with 200 items per page
     while len(feedbacks) < max_entries:
-        # Wait for items per page button and click to set to 200
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, 'button[data-test-id="pagination-item-page-4"]'))
-        ).click()
-        time.sleep(5)  # Wait for the page to reload with 200 items per page
+
 
         # Parse the page source with BeautifulSoup
         soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -126,22 +125,22 @@ def display_sidebar():
     """
     image_path = "uploads/logo.png"
     st.sidebar.image(image_path, use_column_width=True)
-    
-    st.sidebar.header('Documentation')
-    st.sidebar.write("""
-    **Ebay Reviews** is a web application built to manage Eyeware ecommerce store.
 
-    ### Features:
-    - **Web Scraping**: Scrape reviews from eBay feedback pages.
-    - **Data Export**: Save scraped reviews to an Excel file.
+    with st.sidebar.expander("Documentation", icon="📚"):
+        st.write("""
+        **Ebay Reviews** is a web application built to manage Eyeware ecommerce store.
 
-    ### Instructions:
-    1. **Choose Site**: Select which eBay feedback site to scrape.
-    2. **Enter URL**: Provide the URL of the eBay feedback page.
-    3. **Scrape Data**: Click "Scrape Data" to collect and save reviews.
+        ### Features:
+        - **Web Scraping**: Scrape reviews from eBay feedback pages.
+        - **Data Export**: Save scraped reviews to an Excel file.
 
-    Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
-    """)
+        ### Instructions:
+        1. **Choose Site**: Select which eBay feedback site to scrape.
+        2. **Enter URL**: Provide the URL of the eBay feedback page.
+        3. **Scrape Data**: Click "Scrape Data" to collect and save reviews.
+
+        Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
+        """)
 
 def main():
     """

@@ -67,19 +67,19 @@ if uploaded_file is not None:
         st.error("Failed to load the uploaded file.")
 
 # Documentation
-st.sidebar.header('Documentation')
-st.sidebar.write("""
-**SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
+with st.sidebar.expander("Documentation", icon="📚"):
+    st.write("""
+    **SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
 
-### Features:
-- **File Upload**: Upload product data in JSON or Excel format.
-- **Data Editing**: Edit the product data directly within the application.
-- **Save Changes**: Save the edited data back to the original file format.
+    ### Features:
+    - **File Upload**: Upload product data in JSON or Excel format.
+    - **Data Editing**: Edit the product data directly within the application.
+    - **Save Changes**: Save the edited data back to the original file format.
 
-### Instructions:
-1. **Upload File**: Click on "Choose a file" to upload your product data.
-2. **Edit Data**: Make changes to the data using the provided editor.
-3. **Save Changes**: Click on "Save Changes" to save your edits.
+    ### Instructions:
+    1. **Upload File**: Click on "Choose a file" to upload your product data.
+    2. **Edit Data**: Make changes to the data using the provided editor.
+    3. **Save Changes**: Click on "Save Changes" to save your edits.
 
-Supported file formats: **JSON**, **Excel**.
-""")
+    Supported file formats: **JSON**, **Excel**.
+    """)

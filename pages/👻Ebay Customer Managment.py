@@ -39,21 +39,21 @@ def display_sidebar():
     st.sidebar.image(image_path, use_column_width=True)
     
     # Documentation section in the sidebar
-    st.sidebar.header('Documentation')
-    st.sidebar.write("""
-    **SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
-    
-    ### Features:
-    - **File Upload**: Upload product data in Excel or CSV format.
-    - **Data Editing**: Edit the product data directly within the application.
-    
-    ### Instructions:
-    1. **Select File Type**: Choose the file type (Excel or CSV) you want to upload.
-    2. **Upload File**: Click on "Upload your file" to upload your product data.
-    3. **Edit Data**: Make changes to the data using the provided editor.
-    
-    Supported file formats: **Excel**, **CSV**.
-    """)
+    with st.sidebar.expander("Documentation", icon="📚"):
+        st.write("""
+        **SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
+        
+        ### Features:
+        - **File Upload**: Upload product data in Excel or CSV format.
+        - **Data Editing**: Edit the product data directly within the application.
+        
+        ### Instructions:
+        1. **Select File Type**: Choose the file type (Excel or CSV) you want to upload.
+        2. **Upload File**: Click on "Upload your file" to upload your product data.
+        3. **Edit Data**: Make changes to the data using the provided editor.
+        
+        Supported file formats: **Excel**, **CSV**.
+        """)
 
 def main():
     """
