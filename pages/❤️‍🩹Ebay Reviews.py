@@ -7,7 +7,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
 import re
+import os, sys
 
 # Configuration from Streamlit secrets
 ebay_feedback_site1 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST"
@@ -16,6 +21,16 @@ ebay_feedback_site2 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity_sto
 st.set_page_config(page_title='Ebay Reviews', page_icon='🎉')
 st.title('Ebay Reviews')
 
+@st.cache_resource
+def get_driver():
+    #return webdriver.Chrome()
+    return webdriver.Chrome(
+            service=Service(
+                #ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            ),
+           options=options,
+        )
+        
 def clean_item_description(description):
     """
     Clean the item description by removing unwanted text patterns.
@@ -51,7 +66,13 @@ def get_ebay_reviews(store_url, max_entries=200):
     Returns:
         list of dict: A list of dictionaries containing review data.
     """
-    driver = webdriver.Chrome()
+    options = Options()
+    options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+
+    driver = get_driver()
+    #driver.get("http://example.com")
+    #driver = webdriver.Chrome()
     #driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
     driver.get(store_url)
     
