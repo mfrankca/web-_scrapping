@@ -14,6 +14,12 @@ from webdriver_manager.core.os_manager import ChromeType
 import re
 import os, sys
 
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import chromedriver_autoinstaller
+
 # Configuration from Streamlit secrets
 ebay_feedback_site1 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST"
 ebay_feedback_site2 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity_store?sort=NEWEST"
@@ -23,14 +29,26 @@ st.title('Ebay Reviews')
 
 @st.cache_resource
 def get_driver():
-    return webdriver.Chrome()
+    #return webdriver.Chrome()
     #return webdriver.Chrome(
     #        service=Service(
     #            #ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
     #        ),
     #       options=options,
     #    )
-        
+    # Automatically download and install the correct version of chromedriver
+    chromedriver_autoinstaller.install()
+
+    # Set up headless Chrome
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # Initialize the WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
+    return driver 
+    
 def clean_item_description(description):
     """
     Clean the item description by removing unwanted text patterns.
