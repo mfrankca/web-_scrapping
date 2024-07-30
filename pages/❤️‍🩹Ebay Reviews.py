@@ -23,13 +23,13 @@ st.title('Ebay Reviews')
 
 @st.cache_resource
 def get_driver():
-    #return webdriver.Chrome()
-    return webdriver.Chrome(
-            service=Service(
-                #ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
-            ),
-           options=options,
-        )
+    return webdriver.Chrome()
+    #return webdriver.Chrome(
+    #        service=Service(
+    #            #ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+    #        ),
+    #       options=options,
+    #    )
         
 def clean_item_description(description):
     """
