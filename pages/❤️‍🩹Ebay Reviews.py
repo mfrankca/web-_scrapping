@@ -84,9 +84,6 @@ def get_ebay_reviews(store_url, max_entries=200):
     Returns:
         list of dict: A list of dictionaries containing review data.
     """
-    options = Options()
-    options.add_argument("--disable-gpu")
-    options.add_argument("--headless")
 
     driver = get_driver()
     #driver.get("http://example.com")
