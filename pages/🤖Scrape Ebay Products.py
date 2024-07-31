@@ -209,6 +209,7 @@ def generate_output_files(data, output_format):
         output_files.append(csv_file) 
 
     return output_files
+
 image_path = "uploads//logo.png"
 st.sidebar.image(image_path, use_column_width=True)
 st.title("Welcome to SunRayCity Managment")  
