@@ -117,7 +117,7 @@ def save_comparison_result(new_entries, deleted_entries, differences, add_output
 def main():  
     # Main title and description
     st.title("Welcome to SunRayCity Management")
-    st.header('Comparfe Ebay Product Catalogs')
+    st.header('Compare Ebay Product Catalogs')
 
         
     file_type = st.selectbox("Select file type", ["Excel", "CSV","JSON"])
