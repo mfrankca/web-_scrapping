@@ -217,7 +217,7 @@ st.title('Web Scraping App')
 st.write('Upload a file with listing numbers and select the output file format.')
 
 uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
-output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'Both'])
+output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'CSV'])
 
 if uploaded_file is not None:
     if st.button('Scrape Data'):
