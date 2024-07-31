@@ -9,18 +9,20 @@ def display_sidebar():
     
     with st.sidebar.expander("Documentation", icon="📚"):
         st.write("""
-        **Ebay Reviews** is a web application built to manage eBay reviews.
+        **Welcome to the SunRayCity Management Tool**
 
-        ### Features:
-        - **Web Scraping**: Scrape reviews from eBay feedback pages.
-        - **Data Export**: Save scraped reviews to an Excel file.
+        ### About SunRayCity Sunglasses
+        At SunRayCity Sunglasses, we search the world for the best deals on fashion and sport sunglasses. We only sell authentic and brand name sunglasses. If you are searching for a specific model that you cannot find on the site, send us an email at [sales@sunraycity.com](mailto:sales@sunraycity.com) and we will do our best to find it. We operate online only to offer these deals.
 
-        ### Instructions:
-        1. **Choose Site**: Select which eBay feedback site to scrape.
-        2. **Scrape Data**: Click "Scrape Data" to collect and save reviews.
-
-        Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
-        """)
+        ### Features
+        - **Manage Customers**: Keep track of customer details and interactions.
+        - **Product Catalog Management**: Maintain and update the product catalog.
+        - **eBay Product Catalog Scraping**: Scrape product data from eBay.
+        - **Scrape eBay Reviews**: Scrape reviews from the following eBay feedback pages:
+          - [SunRayCity eBay Store 1](https://www.ebay.com/fdbk/feedback_profile/sunraycity)
+          - [SunRayCity eBay Store 2](https://www.ebay.com/fdbk/feedback_profile/sunraycity_store)
+        - **Compare Product Catalogs**: Compare the product catalog on eBay vs. the SunRayCity website.
+""")
 def main():        
     st.set_page_config(
         page_title="Ex-stream-ly Cool App",
@@ -40,23 +42,7 @@ def main():
     image_path = "uploads//sunglasses.png"
     st.image(image_path, use_column_width=True)
     display_sidebar()
-    #image_path = "uploads/logo.png"
-    #st.sidebar.image(image_path, use_column_width=True)
-    #with st.sidebar.beta_expander("See Documentation",  icon="📚"):
-    #    st.write("""
-    #   **SunRayCity Management** is a web application built to manage Eyeware ecommerce store. 
-        
-        ### Features:
-    #   - **File Upload**: Upload product data in Excel or CSV format.
-    #   - **Data Editing**: Edit the product data directly within the application.
-        
-        ### Instructions:
-    #    1. **Select File Type**: Choose the file type (Excel or CSV) you want to upload.
-    #    2. **Upload File**: Click on "Upload your file" to upload your product data.
-    #   3. **Edit Data**: Make changes to the data using the provided editor.
-    #   
-    #   Supported file formats: **Excel**, **CSV**.
-    #   """)
+    
  
 if __name__ == "__main__":
     main() 
