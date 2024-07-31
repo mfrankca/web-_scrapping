@@ -8,15 +8,15 @@ import boto3
 from io import BytesIO
 import base64
 
-# Sidebar image
-image_path = "uploads/logo.png"
-if os.path.exists(image_path):
+def display_sidebar():
+    """
+    Display the sidebar with a logo image and documentation.
+    """
+    image_path = "uploads/logo.png"
     st.sidebar.image(image_path, use_column_width=True)
-else:
-    st.sidebar.write("Logo not found")
 
     with st.sidebar.expander("Documentation", icon="📚"):
-        st.write("""
+       st.write("""
         **Welcome to the SunRayCity Management Tool**
 
         ### About SunRayCity Sunglasses
@@ -118,7 +118,7 @@ def main():
     # Main title and description
     st.title("Welcome to SunRayCity Management")
     st.header('Compare Ebay Product Catalogs')
-
+    display_sidebar()
         
     file_type = st.selectbox("Select file type", ["Excel", "CSV","JSON"])
             
