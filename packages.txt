@@ -1,2 +1,2 @@
 # Google Chrome
-google-chrome-stable
+CHROMIUM
