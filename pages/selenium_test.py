@@ -26,4 +26,5 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("https://www.ebay.com/fdbk/feedback_profile/sunraycity")
+st.write(driver.title)
 driver.quit()
