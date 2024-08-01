@@ -190,6 +190,7 @@ def main():
     if st.button('Scrape Data'):
         if store_url:
             reviews = get_ebay_reviews(store_url)
+            st.write("HELLO")
             if reviews:
                 st.write("Scraping completed!")
                 file_path = "reviews.xlsx"
