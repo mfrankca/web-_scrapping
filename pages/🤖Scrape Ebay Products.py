@@ -48,6 +48,38 @@ def add_logo(png_file):
         logo_markup,
         unsafe_allow_html=True,
     )  
+    
+def display_sidebar():
+    """
+    Display the sidebar with a logo image and documentation.
+    """
+    image_path = "uploads/logo.png"
+    st.sidebar.image(image_path, use_column_width=True)
+
+    with st.sidebar.expander("Documentation", icon="📚"):
+       st.write("""
+        **Welcome to the SunRayCity Management Tool**
+
+        ### About SunRayCity Sunglasses
+        At SunRayCity Sunglasses, we search the world for the best deals on fashion and sport sunglasses. We only sell authentic and brand name sunglasses. If you are searching for a specific model that you cannot find on the site, send us an email at [sales@sunraycity.com](mailto:sales@sunraycity.com) and we will do our best to find it. We operate online only to offer these deals.
+
+        ### Features
+        - **Manage Customers**: Keep track of customer details and interactions.
+        - **Product Catalog Management**: Maintain and update the product catalog.
+        - **eBay Product Catalog Scraping**: Scrape product data from eBay.
+        - **Scrape eBay Reviews**: Scrape reviews from the following eBay feedback pages:
+          - [SunRayCity eBay Store 1](https://www.ebay.com/fdbk/feedback_profile/sunraycity)
+          - [SunRayCity eBay Store 2](https://www.ebay.com/fdbk/feedback_profile/sunraycity_store)
+        - **Compare Product Catalogs**: Compare the product catalog on eBay vs. the SunRayCity website.
+
+        ### Instructions
+        1. **Choose Site**: Select which eBay feedback site to scrape.
+        2. **Enter URL**: Provide the URL of the eBay feedback page.
+        3. **Scrape Data**: Click "Scrape Data" to collect and save reviews.
+
+        Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
+        """)
+           
 def scrape_ebay(item):
     url = f'https://www.ebay.com/itm/{item}'
     response = requests.get(url)
@@ -210,13 +242,13 @@ def generate_output_files(data, output_format):
 
     return output_files
 
-image_path = "uploads//logo.png"
-st.sidebar.image(image_path, use_column_width=True)
-st.title("Welcome to SunRayCity Managment")  
+#image_path = "uploads//logo.png"
+#st.sidebar.image(image_path, use_column_width=True)
+#st.title("Welcome to SunRayCity Management")  
 
 st.title('Web Scraping App')
 st.write('Upload a file with listing numbers and select the output file format.')
-
+display_sidebar()
 uploaded_file = st.file_uploader('Choose a file', type=['csv', 'txt'])
 output_format = st.multiselect('Select output format', ['Excel', 'JSON', 'CSV'])
 
