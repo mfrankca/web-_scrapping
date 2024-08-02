@@ -47,6 +47,7 @@ def get_driver():
 
     # Initialize the WebDriver
     driver = webdriver.Chrome(options=chrome_options)
+    st.write(driver.title)
     return driver 
     
 def clean_item_description(description):
@@ -86,11 +87,11 @@ def get_ebay_reviews(store_url, max_entries=200):
     """
 
     driver = get_driver()
-    #driver.get("http://example.com")
+    driver.get("https://www.ebay.com/fdbk/feedback_profile/sunraycity")
     #driver = webdriver.Chrome()
     #driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
-    driver.get(store_url)
-    
+    #driver.get(store_url)
+    st.write(driver.title)
     feedbacks = []
     seen_feedback_ids = set()  # To track feedback IDs and avoid duplicates
     #Wait for items per page button and click to set to 200
