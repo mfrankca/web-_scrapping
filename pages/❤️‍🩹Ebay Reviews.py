@@ -27,7 +27,7 @@ ebay_feedback_site2 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity_sto
 st.set_page_config(page_title='Ebay Reviews', page_icon='🎉')
 st.title('Ebay Reviews')
 
-@st.cache_resource
+#@st.cache_resource
 def get_driver():
     #return webdriver.Chrome()
     #return webdriver.Chrome(
@@ -85,9 +85,22 @@ def get_ebay_reviews(store_url, max_entries=200):
     Returns:
         list of dict: A list of dictionaries containing review data.
     """
+     # Automatically download and install the correct version of chromedriver
+    chromedriver_autoinstaller.install()
 
-    driver = get_driver()
+    # Set up headless Chrome
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # Initialize the WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
+
     driver.get("https://www.ebay.com/fdbk/feedback_profile/sunraycity")
+    st.write(driver.title)
+    driver.quit()
+
     #driver = webdriver.Chrome()
     #driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
     #driver.get(store_url)
