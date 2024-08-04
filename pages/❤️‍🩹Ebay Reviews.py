@@ -1,157 +1,100 @@
-import requests
-from bs4 import BeautifulSoup
 import streamlit as st
 import pandas as pd
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.os_manager import ChromeType
 import re
-import os, sys
 import asyncio
-from playwright.sync_api import sync_playwright
+import nest_asyncio
+from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import chromedriver_autoinstaller
+# Apply nest_asyncio to allow nesting of event loops
+nest_asyncio.apply()
 
 # Configuration from Streamlit secrets
 ebay_feedback_site1 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST"
 ebay_feedback_site2 = "https://www.ebay.com/fdbk/feedback_profile/sunraycity_store?sort=NEWEST"
+
 # Set up the Streamlit page
 st.set_page_config(page_title='Ebay Reviews', page_icon='🎉')
 st.title('Ebay Reviews')
 
-#@st.cache_resource
-def get_driver():
-    #return webdriver.Chrome()
-    #return webdriver.Chrome(
-    #        service=Service(
-    #            #ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
-    #        ),
-    #       options=options,
-    #    )
-    # Automatically download and install the correct version of chromedriver
-    chromedriver_autoinstaller.install()
-
-    # Set up headless Chrome
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    # Initialize the WebDriver
-    driver = webdriver.Chrome(options=chrome_options)
-    st.write(driver.title)
-    return driver 
-    
 def clean_item_description(description):
-    """
-    Clean the item description by removing unwanted text patterns.
-    
-    Args:
-        description (str): The item description to be cleaned.
-    
-    Returns:
-        str: The cleaned item description.
-    """
     cleaned_description = re.sub(r'\s*\(#.*$', '', description)
     return cleaned_description
 
 def save_reviews_to_excel(reviews, file_path):
-    """
-    Save the collected reviews to an Excel file.
-    
-    Args:
-        reviews (list of dict): The list of reviews to be saved.
-        file_path (str): The file path to save the Excel file.
-    """
     df = pd.DataFrame(reviews)
     df.to_excel(file_path, index=False)
 
-def get_ebay_reviews(store_url, max_entries=200):
-    """
-    Scrape eBay reviews from the given store URL.
-    
-    Args:
-        store_url (str): The URL of the eBay store's feedback page.
-        max_entries (int): The maximum number of reviews to scrape.
-    
-    Returns:
-        list of dict: A list of dictionaries containing review data.
-    """
+async def get_ebay_reviews(store_url, max_entries=200):
     reviews = []
     seen_feedback_ids = set()  # To track feedback IDs and avoid duplicates
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto(store_url)
-        while len(feedbacks) < max_entries:
-                # Wait for the feedback table to load
-                page.wait_for_selector('table#feedback-cards')
-                feedback_table = page.query_selector('table#feedback-cards')
-                if feedback_table:
-                    for row in feedback_table.find_all('tr', {'data-feedback-id': True}):
-                        feedback = {}
-                        feedback_id = row['data-feedback-id']
-                        
-                        if feedback_id in seen_feedback_ids:
-                            continue
-                        
-                        seen_feedback_ids.add(feedback_id)
-                        
-                        # Extract rating
-                        rating_tag = row.find('svg', {'data-test-id': lambda x: x and x.startswith('fdbk-rating-')})
-                        feedback['Rating'] = rating_tag['aria-label'] if rating_tag else 'N/A'
-                        
-                        # Extract item description
-                        item_name_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-item-')})
-                        feedback['item_description'] = clean_item_description(item_name_element.text.strip()) if item_name_element else 'N/A'
-                        
-                        # Extract comments from buyer
-                        comment_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-comment-')})
-                        feedback['Comments'] = comment_element.text.strip() if comment_element else 'N/A'
-                        
-                        # Extract feedback from element
-                        feedback_from_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-context-')})
-                        feedback['From'] = feedback_from_element.text.strip() if feedback_from_element else 'N/A'
-                        
-                        # Extract feedback time
-                        feedback_when_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-time-')})
-                        feedback['When'] = feedback_when_element.text.strip() if feedback_when_element else 'N/A'
-                        
-                        # Add feedback to list
-                        if all(value != 'N/A' for value in feedback.values()):
-                            feedbacks.append(feedback)
-                        
-                        if len(feedbacks) >= max_entries:
-                            break
-                
-                # Simulate clicking the "Next" button if more feedback is needed
-                try:
-                    next_button = page.query_selector('button#next-page')
-                    if next_button:
-                            next_button.click()
-                            page.wait_for_timeout(3000)  # Wait for the new entries to load
-                    else:
-                            break  # No more pages
-                except Exception as e:
-                    print("No more pages or an error occurred:", e)
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        await page.goto(store_url)
+
+        while len(reviews) < max_entries:
+            try:
+                await page.wait_for_selector('table#feedback-cards')
+            except PlaywrightTimeoutError:
+                break
+
+            feedback_table = await page.query_selector('table#feedback-cards')
+            if not feedback_table:
+                break
+
+            content = await page.content()
+            soup = BeautifulSoup(content, 'html.parser')
+            feedback_table = soup.find('table', id='feedback-cards')
+
+            if feedback_table:
+                for row in feedback_table.find_all('tr', {'data-feedback-id': True}):
+                    feedback = {}
+                    feedback_id = row['data-feedback-id']
+                    
+                    if feedback_id in seen_feedback_ids:
+                        continue
+                    
+                    seen_feedback_ids.add(feedback_id)
+                    
+                    rating_tag = row.find('svg', {'data-test-id': lambda x: x and x.startswith('fdbk-rating-')})
+                    feedback['Rating'] = rating_tag['aria-label'] if rating_tag else 'N/A'
+                    
+                    item_name_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-item-')})
+                    feedback['item_description'] = clean_item_description(item_name_element.text.strip()) if item_name_element else 'N/A'
+                    
+                    comment_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-comment-')})
+                    feedback['Comments'] = comment_element.text.strip() if comment_element else 'N/A'
+                    
+                    feedback_from_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-context-')})
+                    feedback['From'] = feedback_from_element.text.strip() if feedback_from_element else 'N/A'
+                    
+                    feedback_when_element = row.find('span', {'data-test-id': lambda x: x and x.startswith('fdbk-time-')})
+                    feedback['When'] = feedback_when_element.text.strip() if feedback_when_element else 'N/A'
+                    
+                    if all(value != 'N/A' for value in feedback.values()):
+                        reviews.append(feedback)
+                    
+                    if len(reviews) >= max_entries:
+                        break
+            
+            try:
+                next_button = await page.query_selector('button#next-page')
+                if next_button:
+                    await next_button.click()
+                    await asyncio.sleep(3)
+                else:
                     break
-        browser.close()
-    return feedbacks
+            except Exception as e:
+                print("No more pages or an error occurred:", e)
+                break
+
+        await browser.close()
+    
+    return reviews
 
 def display_sidebar():
-    """
-    Display the sidebar with a logo image and documentation.
-    """
     image_path = "uploads/logo.png"
     st.sidebar.image(image_path, use_column_width=True)
 
@@ -172,9 +115,6 @@ def display_sidebar():
         """)
 
 def main():
-    """
-    Main function to set up the Streamlit app.
-    """
     display_sidebar()
 
     site_choice = st.selectbox("Choose eBay feedback site", ["ebay_feedback_site1", "ebay_feedback_site2"])
@@ -182,8 +122,7 @@ def main():
 
     if st.button('Scrape Data'):
         if store_url:
-            reviews = get_ebay_reviews(store_url)
-            st.write("HELLO")
+            reviews = asyncio.run(get_ebay_reviews(store_url))
             if reviews:
                 st.write("Scraping completed!")
                 file_path = "reviews.xlsx"
