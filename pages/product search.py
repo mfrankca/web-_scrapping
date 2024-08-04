@@ -25,7 +25,7 @@ def scrape_ebay_sold_items(username, password):
     time.sleep(5)  # Wait for the login process to complete
 
     # Navigate to the research tab
-    research_url = 'https://www.ebay.com/sh/research?marketplace=EBAY-US&keywords=Bolle+Parole+%2F+Vigilante+Sunglasses+Temple+Tips+Matte+Black+Set+x+2&dayRange=90&endDate=1722810843753&startDate=1715034843753&categoryId=0&offset=0&limit=50&tabName=SOLD&tz=America%2FToronto'
+    research_url = 'https://www.ebay.com/sh/research?marketplace=EBAY-US&dayRange=90&endDate=1722739782259&startDate=1714963782259&tabName=SOLD&tz=America%2FToronto'
     driver.get(research_url)
     time.sleep(5)  # Wait for the page to load
 
@@ -69,5 +69,5 @@ def scrape_ebay_sold_items(username, password):
 
 if __name__ == "__main__":
     username = 'reddiveusa@gmail.com'
-    password = 'Profit44'
+    password = 'Profit44 '
     scrape_ebay_sold_items(username, password)
