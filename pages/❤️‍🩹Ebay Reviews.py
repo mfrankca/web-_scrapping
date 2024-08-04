@@ -133,19 +133,18 @@ def get_ebay_reviews(store_url, max_entries=200):
                         if len(feedbacks) >= max_entries:
                             break
                 
-        # Simulate clicking the "Next" button if more feedback is needed
-        try:
-            next_button = page.query_selector('button#next-page')
-            if next_button:
-                    next_button.click()
-                    page.wait_for_timeout(3000)  # Wait for the new entries to load
-            else:
-                    break  # No more pages
-        except Exception as e:
-            print("No more pages or an error occurred:", e)
-            break
-    
-    browser.close()
+                # Simulate clicking the "Next" button if more feedback is needed
+                try:
+                    next_button = page.query_selector('button#next-page')
+                    if next_button:
+                            next_button.click()
+                            page.wait_for_timeout(3000)  # Wait for the new entries to load
+                    else:
+                            break  # No more pages
+                except Exception as e:
+                    print("No more pages or an error occurred:", e)
+                    break
+        browser.close()
     return feedbacks
 
 def display_sidebar():
