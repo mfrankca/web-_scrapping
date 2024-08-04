@@ -30,7 +30,7 @@ def parse(soup):
 def output(productslist, searchterm):
     productsdf =  pd.DataFrame(productslist)
     productsdf.to_csv(searchterm + 'output.csv', index=False)
-    print('Saved to CSV')
+    st.write('Saved to CSV')
     return
 
 soup = get_data(searchterm)
