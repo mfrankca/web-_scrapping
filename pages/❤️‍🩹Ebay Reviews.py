@@ -13,6 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
 import re
 import os, sys
+import asyncio
 from playwright.sync_api import sync_playwright
 
 import time
