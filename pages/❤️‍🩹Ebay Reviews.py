@@ -93,10 +93,9 @@ def get_ebay_reviews(store_url, max_entries=200):
         page = browser.new_page()
         page.goto(store_url)
         while len(feedbacks) < max_entries:
-                # Parse the page source with BeautifulSoup
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
-                feedback_table = soup.find('table', id='feedback-cards')
-
+                # Wait for the feedback table to load
+                page.wait_for_selector('table#feedback-cards')
+                feedback_table = page.query_selector('table#feedback-cards')
                 if feedback_table:
                     for row in feedback_table.find_all('tr', {'data-feedback-id': True}):
                         feedback = {}
@@ -136,17 +135,17 @@ def get_ebay_reviews(store_url, max_entries=200):
                 
         # Simulate clicking the "Next" button if more feedback is needed
         try:
-            next_button = driver.find_element(By.CSS_SELECTOR, 'button#next-page')
+            next_button = page.query_selector('button#next-page')
             if next_button:
                     next_button.click()
                     page.wait_for_timeout(3000)  # Wait for the new entries to load
             else:
                     break  # No more pages
         except Exception as e:
-                print("No more pages or an error occurred:", e)
-                break
+            print("No more pages or an error occurred:", e)
+            break
     
-    driver.quit()
+    browser.close()
     return feedbacks
 
 def display_sidebar():
