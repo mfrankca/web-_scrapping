@@ -21,6 +21,7 @@ def get_data(searchterm):
     return soup
 
 def parse(soup):
+    st.write(soup)
     productslist = []
     results = soup.find_all('div', {'class': 's-item__info clearfix'})
     for item in results:
