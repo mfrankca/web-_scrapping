@@ -11,7 +11,7 @@ response = requests.get(url)
 
 if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
-    
+    st.write(soup.prettify())
     products = []
 
     for item in soup.find_all('div', class_='sold-result-table'):  # Update with the actual class name
