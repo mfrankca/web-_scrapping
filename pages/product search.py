@@ -15,7 +15,7 @@ def get_data(searchterm):
 
 def parse(soup):
     productslist = []
-    results = soup.find_all('div', {'class': 's-item__info clearfix'})
+    results = soup.find_all('div', {'class': 'sold-result-table'})
     for item in results:
         product = {
             'title': item.find('h3', {'class': 's-item__title s-item__title--has-tags'}).text,
