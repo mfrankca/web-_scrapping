@@ -23,6 +23,6 @@ if response.status_code == 200:
         })
 
     for product in products:
-        print(f"Product Name: {product['name']}, Price: {product['price']}")
+        st.write(f"Product Name: {product['name']}, Price: {product['price']}")
 else:
-    print("Failed to retrieve the page")
+    st.write("Failed to retrieve the page")
