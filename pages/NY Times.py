@@ -10,8 +10,8 @@ options = Options()
 options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 
-driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install(), options=options)
-
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                                  options=options)
 # Get the New York Times page
 driver.get("https://nytimes.com")
 
