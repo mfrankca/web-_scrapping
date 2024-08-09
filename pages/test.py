@@ -1,7 +1,7 @@
 import EbayScraper
 import streamlit as st
 
-averagePrice = EbayScraper.Average(query='Bolle Parole / Vigilante Sunglasses Temple Tips Matte Black Set x 2', condition='new')
+averagePrice = EbayScraper.Average(query='FLEXON 472 023 Silver Lilac Eyeglasses 472-023 50mm Marchon', condition='new')
 st.write(averagePrice)
 
 itemList = EbayScraper.Items(query='FLEXON 472 023 Silver Lilac Eyeglasses 472-023 50mm Marchon', country='us', condition='new')
