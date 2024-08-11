@@ -36,13 +36,12 @@ for cookie in driver.get_cookies():
 '''
 # Step 3: Use the session to scrape the desired page
 target_url = 'https://www.ebay.com'
-response = requests.get(target_url)
-
+url = f'https://www.ebay.com/itm/294453072910'
+response = requests.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 
-# Example: Extracting the item title
-item_title =  soup.find('h1', attrs={'class': 'pageTitle'})
-print('Item Title:', item_title)
-
-# Close the Selenium WebDriver
-##driver.quit()
+try:
+         title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
+         row['Title'] = title_element.text.replace('Details about', '').strip() if title_element else 'Not Available'
+except AttributeError:
+          row['Title'] = 'Not Available' 
