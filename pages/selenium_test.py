@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+from selenium.webdriver.chrome.service import Service
 
 
 username = "reddiveusa@gmail.com" 
@@ -33,6 +34,7 @@ def get_website_content(url):
     finally:
         if driver is not None: driver.quit()
     return None
+
 # ---------------- Page & UI/UX Components ------------------------
 def main_sidebar():
     # 1.Vertical Menu
