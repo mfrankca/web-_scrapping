@@ -35,13 +35,10 @@ for cookie in driver.get_cookies():
     session.cookies.set(cookie['name'], cookie['value'])
 '''
 # Step 3: Use the session to scrape the desired page
-target_url = 'https://www.ebay.com'
-url = f'https://www.ebay.com/itm/294453072910'
+
+url = 'https://www.ebay.com/itm/294453072910'
 response = requests.get(url)
 soup = BeautifulSoup(response.content, 'html.parser')
 
-try:
-         title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
-         row['Title'] = title_element.text.replace('Details about', '').strip() if title_element else 'Not Available'
-except AttributeError:
-          row['Title'] = 'Not Available' 
+title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
+row['Title'] = title_element.text.replace('Details about', '').strip() if title_element else 'Not Available'
