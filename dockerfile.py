@@ -1,10 +1,11 @@
-FROM python 3.10
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY . /app
 
-RUN pip install --trusted host pypi.python.org -r requirements.txt
+RUN pip install -r requirements.txt
+RUN mkdir ~/.streamlit
 
 RUN apt-get update && apt-get install -y wget unzip && \
 

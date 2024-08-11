@@ -35,7 +35,7 @@ for cookie in driver.get_cookies():
     session.cookies.set(cookie['name'], cookie['value'])
 '''
 # Step 3: Use the session to scrape the desired page
-target_url = 'https://www.ebay.com/sh/research?marketplace=EBAY-US&tabName=SOLD'
+target_url = 'https://www.ebay.com'
 response = requests.get(target_url)
 
 soup = BeautifulSoup(response.content, 'html.parser')
