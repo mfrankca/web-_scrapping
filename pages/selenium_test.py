@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.webdriver.chrome.service import Service
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 username = "reddiveusa@gmail.com" 
 password = "Profit44" 
@@ -43,8 +43,8 @@ def main_sidebar():
 
 
 def site_extraction_page():
-    SAMPLE_URL = "https://spectrum.ieee.org/3d-printed-rocket"
-    url = st.text_input(label="URL", placeholder="https://example.com", value=SAMPLE_URL)
+    SAMPLE_URL = 'https://www.ebay.com/itm/294453072910'
+    url = st.text_input(label="URL", placeholder='https://www.ebay.com/itm/294453072910', value=SAMPLE_URL)
 
     clicked = st.button("Load Page Content",type="primary")
     if clicked:
