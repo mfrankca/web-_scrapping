@@ -19,17 +19,18 @@ def get_website_content(url):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
-        options.add_argument('--window-size=1920,1200')
+
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                                   options=options)
         st.write(f"DEBUG:DRIVER:{driver}")
         st.write(url)
         driver.get(url)
-        time.sleep(5)
-        html_doc = driver.page_source
-        driver.quit()
-        soup = BeautifulSoup(html_doc, "html.parser")
-        return soup.get_text()
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        feedback_table = soup.find('table', id='feedback-cards')
+
+        #driver.quit()
+    
+        return feedback_table
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
     finally:
@@ -44,8 +45,8 @@ def main_sidebar():
 
 
 def site_extraction_page():
-    SAMPLE_URL = 'https://www.ebay.com/itm/294453072910'
-    url = st.text_input(label="URL", placeholder='https://www.ebay.com/itm/294453072910', value=SAMPLE_URL)
+    SAMPLE_URL = 'https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST'
+    url = st.text_input(label="URL", placeholder='https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST', value=SAMPLE_URL)
 
     clicked = st.button("Load Page Content",type="primary")
     if clicked:
