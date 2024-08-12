@@ -18,7 +18,9 @@ def get_website_content(url):
         # Using on Local
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
+        #options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                                   options=options)
@@ -35,7 +37,7 @@ def get_website_content(url):
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
     finally:
         if driver is not None: driver.quit()
-    return None
+
 
 # ---------------- Page & UI/UX Components ------------------------
 def main_sidebar():
