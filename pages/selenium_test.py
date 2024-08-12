@@ -23,6 +23,7 @@ def get_website_content(url):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
                                   options=options)
         st.write(f"DEBUG:DRIVER:{driver}")
+        st.write(url)
         driver.get(url)
         time.sleep(5)
         html_doc = driver.page_source
