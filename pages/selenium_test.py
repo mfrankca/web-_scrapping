@@ -58,7 +58,8 @@ def site_extraction_page():
 
 if __name__ == "__main__":
     main_sidebar()
-    
+  
+
 """   
 url = 'https://www.ebay.com/itm/294453072910'
 response = requests.get(url)
