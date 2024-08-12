@@ -52,8 +52,8 @@ def get_ebay_reviews(store_url, max_entries=200):
     Returns:
         list of dict: A list of dictionaries containing review data.
     """
-    driver = webdriver.Chrome()
-    #driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
+    #driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=Service.ChromeDriverManager().install())
     driver.get(store_url)
     
     feedbacks = []
