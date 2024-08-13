@@ -29,10 +29,10 @@ def main(URL):
 
     except AttributeError:
         title_string = "NA"
-    print("product Title = ", title_string)
+    prst.write("product Title = ", title_string)
 
     # saving the title in the file
-    File.write(f"{title_string},")
+    ###File.write(f"{title_string},")
 
     # retrieving price
     try:
@@ -42,10 +42,10 @@ def main(URL):
         # and commas form our string
     except AttributeError:
         price = "NA"
-    print("Products price = ", price)
+    st.write("Products price = ", price)
 
     # saving
-    File.write(f"{price},")
+    ###File.write(f"{price},")
 
     # retrieving product rating
     try:
@@ -59,9 +59,9 @@ def main(URL):
                 "span", attrs={'class': 'a-icon-alt'}).string.strip().replace(',', '')
         except:
             rating = "NA"
-    print("Overall rating = ", rating)
+    st.write("Overall rating = ", rating)
 
-    File.write(f"{rating},")
+    ####File.write(f"{rating},")
 
     try:
         review_count = soup.find(
@@ -69,8 +69,8 @@ def main(URL):
 
     except AttributeError:
         review_count = "NA"
-    print("Total reviews = ", review_count)
-    File.write(f"{review_count},")
+    st.write("Total reviews = ", review_count)
+    ####File.write(f"{review_count},")
 
     # print availablility status
     try:
