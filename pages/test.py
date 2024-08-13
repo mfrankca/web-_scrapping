@@ -16,7 +16,7 @@ def scrape_product_data(store, query, country):
     if store == 'eBay':
         return EbayScraper.Items(query, country=country)
     elif store == 'Amazon':
-        return AmazonScraper.Items(query, country=country)
+        return AmazonScraper.AmazonItems(query, country=country)
         pass
     elif store == 'Walmart':
         # Implement scraping logic for Walmart here
