@@ -97,7 +97,7 @@ def __ParseItems(soup):
 
     for item in rawItems[1:]:
         
-        #Get item data
+        # Get item data
         title = item.find(class_="s-item__title").find('span').get_text(strip=True)
         
         price = __ParseRawPrice(item.find('span', {'class': 's-item__price'}).get_text(strip=True))
@@ -117,6 +117,13 @@ def __ParseItems(soup):
         try: reviewCount = int("".join(filter(str.isdigit, item.find(class_="s-item__reviews-count").find('span').get_text(strip=True))))
         except: reviewCount = 0
         
+        # Additional details: seller and sold count
+        try: seller = item.find(class_="s-item__seller-info-text").get_text(strip=True)
+        except: seller = ""
+        
+        try: soldCount = int("".join(filter(str.isdigit, item.find(class_="s-item__hotness").get_text(strip=True))))
+        except: soldCount = 0
+        
         url = item.find('a')['href']
 
         itemData = {
@@ -127,9 +134,10 @@ def __ParseItems(soup):
             'time-end': timeEnd,
             'bid-count': bidCount,
             'reviews-count': reviewCount,
+            'seller': seller,  # New field for seller
+            'sold-count': soldCount,  # New field for sold count
             'url': url
         }
-        
         data.append(itemData)
     
     # Remove item with prices too high or too low
