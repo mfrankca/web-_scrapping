@@ -54,7 +54,7 @@ def main():
 
             for product in product_df['Product']:
                 st.write(f"Scraping data for: {product}")
-                product_data = EbayScraper.scrape_product_data(store, product, country)
+                product_data = scrape_product_data(store, product, country)
                 all_products_data.extend(product_data)
             
             # Convert the list of dictionaries to a pandas DataFrame
