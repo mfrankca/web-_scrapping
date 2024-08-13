@@ -47,10 +47,6 @@ def __GetAmazonHTML(query, country):
     soup = BeautifulSoup(request.read(), 'html.parser')
     st.write(url)
     return soup
-
-request = urllib.request.urlopen(url)
-    
-
     
 def __ParseAmazonItems(soup):
     rawItems = soup.find_all('div', {'data-component-type': 's-search-result'})
