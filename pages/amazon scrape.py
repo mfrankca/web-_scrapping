@@ -1,6 +1,7 @@
 # importing libraries
 from bs4 import BeautifulSoup
 import requests
+import streamlit as st
 
 def main(URL):
     # opening our output file in append mode
