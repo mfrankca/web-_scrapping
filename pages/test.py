@@ -31,7 +31,7 @@ def main():
     uploaded_file = st.file_uploader("Upload a file with product descriptions", type=["csv", "xlsx"])
 
     # Dropdown to select the country
-    country = st.selectbox("Select Country", list(countryDict.keys()))
+    country = st.selectbox("Select Country", list(EbayScraper.countryDict.keys()))
 
     # Dropdown to select the e-commerce store
     store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
@@ -52,7 +52,7 @@ def main():
 
             for product in product_df['Product']:
                 st.write(f"Scraping data for: {product}")
-                product_data = scrape_product_data(store, product, country)
+                product_data = EbayScraper.scrape_product_data(store, product, country)
                 all_products_data.extend(product_data)
             
             # Convert the list of dictionaries to a pandas DataFrame
