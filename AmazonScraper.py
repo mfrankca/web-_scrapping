@@ -41,12 +41,13 @@ def __GetAmazonHTML(query, country):
     # Check if request was successful
     response = urllib.request.urlopen(url)
     code = response.getcode()
+    st.write(code)
     if code != 200:
         print("Failed to retrieve the page")
         return None
 
     soup = BeautifulSoup(request.read(), 'html.parser')
-    st.write(url)
+    st.write(soup)
     return soup
     
 def __ParseAmazonItems(soup):
