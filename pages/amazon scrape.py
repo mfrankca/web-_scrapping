@@ -15,7 +15,7 @@ def main(URL):
 
     # Creating the Soup Object containing all data
     soup = BeautifulSoup(webpage.content, "lxml")
-
+    st.write(soup)
     # retrieving product title
     try:
         # Outer Tag Object
