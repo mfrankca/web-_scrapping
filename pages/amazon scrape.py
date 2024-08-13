@@ -29,7 +29,7 @@ def main(URL):
 
     except AttributeError:
         title_string = "NA"
-    prst.write("product Title = ", title_string)
+    st.write("product Title = ", title_string)
 
     # saving the title in the file
     ###File.write(f"{title_string},")
