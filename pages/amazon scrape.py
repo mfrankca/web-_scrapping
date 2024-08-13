@@ -3,97 +3,22 @@ from bs4 import BeautifulSoup
 import requests
 import streamlit as st
 
-def main(URL):
-    # opening our output file in append mode
-    File = open("out.csv", "a")
+# Connect to Website and pull in data
 
-    # specifying user agent, You can use other user agents
-    # available on the internet
+URL = 'https://www.amazon.com/Funny-Data-Systems-Business-Analyst/dp/B07FNW9FGJ/ref=sr_1_3?dchild=1&keywords=data%2Banalyst%2Btshirt&qid=1626655184&sr=8-3&customId=B0752XJYNL&th=1'
 
-    # Making the HTTP Request
-    webpage = requests.get(URL)
+headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36", "Accept-Encoding":"gzip, deflate", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "DNT":"1","Connection":"close", "Upgrade-Insecure-Requests":"1"}
 
-    # Creating the Soup Object containing all data
-    soup = BeautifulSoup(webpage.content, "lxml")
-    st.write(soup)
-    # retrieving product title
-    try:
-        # Outer Tag Object
-        title = soup.find("span", 
-                          attrs={"id": 'productTitle'})
+page = requests.get(URL, headers=headers)
 
-        # Inner NavigableString Object
-        title_value = title.string
+soup1 = BeautifulSoup(page.content, "html.parser")
 
-        # Title as a string value
-        title_string = title_value.strip().replace(',', '')
+soup2 = BeautifulSoup(soup1.prettify(), "html.parser")
 
-    except AttributeError:
-        title_string = "NA"
-    st.write("product Title = ", title_string)
+title = soup2.find(id='productTitle').get_text()
 
-    # saving the title in the file
-    ###File.write(f"{title_string},")
-
-    # retrieving price
-    try:
-        price = soup.find(
-            "span", attrs={'id': 'priceblock_ourprice'}).string.strip().replace(',', '')
-        # we are omitting unnecessary spaces
-        # and commas form our string
-    except AttributeError:
-        price = "NA"
-    st.write("Products price = ", price)
-
-    # saving
-    ###File.write(f"{price},")
-
-    # retrieving product rating
-    try:
-        rating = soup.find("i", attrs={
-                           'class': 'a-icon a-icon-star a-star-4-5'}).string.strip().replace(',', '')
-
-    except AttributeError:
-
-        try:
-            rating = soup.find(
-                "span", attrs={'class': 'a-icon-alt'}).string.strip().replace(',', '')
-        except:
-            rating = "NA"
-    st.write("Overall rating = ", rating)
-
-    ####File.write(f"{rating},")
-
-    try:
-        review_count = soup.find(
-            "span", attrs={'id': 'acrCustomerReviewText'}).string.strip().replace(',', '')
-
-    except AttributeError:
-        review_count = "NA"
-    st.write("Total reviews = ", review_count)
-    ####File.write(f"{review_count},")
-
-    # print availablility status
-    try:
-        available = soup.find("div", attrs={'id': 'availability'})
-        available = available.find("span").string.strip().replace(',', '')
-
-    except AttributeError:
-        available = "NA"
-    print("Availability = ", available)
-
-    # saving the availability and closing the line
-    File.write(f"{available},\n")
-
-    # closing the file
-    File.close()
+price = soup2.find(id='priceblock_ourprice').get_text()
 
 
-if __name__ == '__main__':
-  # opening our url file to access URLs
-    ###file = open("url.txt", "r")
-
-    # iterating over the urls
-    ###for links in file.readlines():
-    links=    url='https://www.amazon.ca/Stylish-Non-prescription-Eyeglasses-Eyeglass-Gradient/dp/B07PY8MQ5M/ref=sr_1_1?crid=3U06ACJEVNQL8&dib=eyJ2IjoiMSJ9.0DPMaxiy5RHMOAe3jYgiNjx2U_l2vejKryfnIhJP_Oe42X7-Ap5be7C2T_71pY-smlLrwMiMkaYU4Ar_4U-1pFMpnwohhSYc44lJCOEjtkPk4zs0eruAY0F65uuVuX_wB6wXFuJwj1Uu0lgjbnmsbxqDCsV94Mpsak6y6j6FL9qPTZ-jO9nlkaqOvZNnvxI16nZcrWAwVyGGq0Vv4jG2sxLA8J6sH2dEAxOPJrky_qxKMjz-wsNpJUo1oN-7ifGgdPD9SeHwfrcwXQA6XpUf1ZsTv5BF1l3rbkzzJr8Ict4.lmcMBgfroCnMyvnQA1bMm6vmzd3t_PEzmPYOxZFUNOk&dib_tag=se&keywords=Fendi+Eyeglasses&qid=1723517219&sprefix=fendi+eyeglasses%2Caps%2C64&sr=8-1'  # Replace with the product URL
-    main(links)
+st.write(title)
+st.write(price)
