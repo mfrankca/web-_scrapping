@@ -105,8 +105,8 @@ def __ParseItems(soup):
         try: shipping = __ParseRawPrice(item.find('span', {'class': 's-item__shipping s-item__logisticsCost'}).find('span', {'class': 'ITALIC'}).get_text(strip=True))
         except: shipping = 0
         
-        try: timeLeft = item.find(class_="s-item__time-left").get_text(strip=True)
-        except: timeLeft = ""
+        try: shipping2 = item.find(class_="ux-textspans ux-textspans--BOLD").get_text(strip=True)
+        except: shipping2  = ""
         
         try: condition = item.find(class_="SECONDARY_INFO").get_text(strip=True)
         except: condition = ""
@@ -134,7 +134,7 @@ def __ParseItems(soup):
             'price': price,
             'shipping': shipping,
             'condition':condition,
-            'time-left': timeLeft,
+            'shipping2 ': shipping2 ,
             'time-end': timeEnd,
             'country': country,
             'reviews-count': reviewCount,
