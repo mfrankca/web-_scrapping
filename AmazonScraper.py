@@ -37,10 +37,21 @@ def __GetAmazonHTML(query, country):
     st.write(url)
     # Get the web page HTML
     request = urllib.request.urlopen(url)
+    # Check if request was successful
+    response = urllib.request.urlopen(url)
+    code = response.getcode()
+    if code != 200:
+        print("Failed to retrieve the page")
+        return None
+
     soup = BeautifulSoup(request.read(), 'html.parser')
     st.write(url)
     return soup
 
+request = urllib.request.urlopen(url)
+    
+
+    
 def __ParseAmazonItems(soup):
     rawItems = soup.find_all('div', {'data-component-type': 's-search-result'})
     data = []
