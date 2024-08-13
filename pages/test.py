@@ -27,14 +27,16 @@ def scrape_product_data(store, query, country):
 def main():
     st.title('Product Data Scraper')
 
+
+    # Dropdown to select the e-commerce store
+    store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
+    
     # File uploader for product descriptions
     uploaded_file = st.file_uploader("Upload a file with product descriptions", type=["csv", "xlsx"])
 
     # Dropdown to select the country
     country = st.selectbox("Select Country", list(EbayScraper.countryDict.keys()))
 
-    # Dropdown to select the e-commerce store
-    store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
 
     if uploaded_file is not None:
         # Read the uploaded file
