@@ -108,11 +108,14 @@ def __ParseItems(soup):
         try: timeLeft = item.find(class_="s-item__time-left").get_text(strip=True)
         except: timeLeft = ""
         
+        try: condition = item.find(class_="SECONDARY_INFO").get_text(strip=True)
+        except: condition = ""
+        
         try: timeEnd = item.find(class_="s-item__time-end").get_text(strip=True)
         except: timeEnd = ""
         
-        try: bidCount = int("".join(filter(str.isdigit, item.find(class_="s-item__bids s-item__bidCount").get_text(strip=True))))
-        except: bidCount = 0
+        try: country = item.find(class_="s-item__location s-item__itemLocation").get_text(strip=True) 
+        except: country = ""
         
         try: reviewCount = int("".join(filter(str.isdigit, item.find(class_="s-item__reviews-count").find('span').get_text(strip=True))))
         except: reviewCount = 0
@@ -130,9 +133,10 @@ def __ParseItems(soup):
             'title': title,
             'price': price,
             'shipping': shipping,
+            'condition':condition,
             'time-left': timeLeft,
             'time-end': timeEnd,
-            'bid-count': bidCount,
+            'country': country,
             'reviews-count': reviewCount,
             'seller': seller,  # New field for seller
             'sold-count': soldCount,  # New field for sold count
