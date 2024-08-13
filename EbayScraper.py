@@ -190,3 +190,31 @@ def __StDevParse(numberList):
     numberList = [nmbr for nmbr in numberList if (avg + stdev >= nmbr >= avg - stdev)]
 
     return numberList
+
+import pandas as pd
+
+def ScrapeAndSaveToExcel(query, country='us', condition='all', type='all', filename='product_data.xlsx'):
+    """
+    Scrapes product data from eBay and saves it to an Excel file.
+
+    Args:
+        query (str): The search query.
+        country (str): The country code for eBay's site.
+        condition (str): The condition of the items ('all', 'new', 'opened', 'refurbished', 'used').
+        type (str): The type of listing ('all', 'auction', 'bin', 'offers').
+        filename (str): The name of the Excel file to save the data to.
+
+    Returns:
+        None
+    """
+    
+    # Get the list of items
+    items = Items(query, country, condition, type)
+    
+    # Convert the list of dictionaries to a pandas DataFrame
+    df = pd.DataFrame(items)
+    
+    # Save the DataFrame to an Excel file
+    df.to_excel(filename, index=False)
+    
+    st.write(f'Data saved to {filename}')
