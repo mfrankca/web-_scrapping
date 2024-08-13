@@ -17,7 +17,7 @@ soup2 = BeautifulSoup(soup1.prettify(), "html.parser")
 
 title = soup2.find(id='productTitle').get_text()
 
-price = soup2.find(id='priceblock_ourprice').get_text()
+#price = soup2.find(id='priceblock_ourprice').get_text()
 
 
 st.write(title)
