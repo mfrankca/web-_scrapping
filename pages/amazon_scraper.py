@@ -1,19 +1,21 @@
-import requests
+import urllib.parse
+import urllib.request
+import urllib.response
 from bs4 import BeautifulSoup
 
 # Function to fetch and parse the Amazon product page
 def scrape_amazon_product(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    response = requests.get(url, headers=headers)
+
+    request = urllib.request.urlopen(url)
     
     # Check if request was successful
-    if response.status_code != 200:
+    response = urllib.request.urlopen(url)
+    code = response.getcode()
+    if code != 200:
         print("Failed to retrieve the page")
         return None
 
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(request.read(), 'html.parser')
 
     # Extract product details
     product_details = {}
@@ -33,7 +35,7 @@ def scrape_amazon_product(url):
 
 # Example usage
 if __name__ == "__main__":
-    url = 'https://www.amazon.com/dp/B08N5WRWNW'  # Replace with the product URL
+    url = 'https://www.amazon.ca/Stylish-Non-prescription-Eyeglasses-Eyeglass-Gradient/dp/B07PY8MQ5M/ref=sr_1_1?crid=3U06ACJEVNQL8&dib=eyJ2IjoiMSJ9.0DPMaxiy5RHMOAe3jYgiNjx2U_l2vejKryfnIhJP_Oe42X7-Ap5be7C2T_71pY-smlLrwMiMkaYU4Ar_4U-1pFMpnwohhSYc44lJCOEjtkPk4zs0eruAY0F65uuVuX_wB6wXFuJwj1Uu0lgjbnmsbxqDCsV94Mpsak6y6j6FL9qPTZ-jO9nlkaqOvZNnvxI16nZcrWAwVyGGq0Vv4jG2sxLA8J6sH2dEAxOPJrky_qxKMjz-wsNpJUo1oN-7ifGgdPD9SeHwfrcwXQA6XpUf1ZsTv5BF1l3rbkzzJr8Ict4.lmcMBgfroCnMyvnQA1bMm6vmzd3t_PEzmPYOxZFUNOk&dib_tag=se&keywords=Fendi+Eyeglasses&qid=1723517219&sprefix=fendi+eyeglasses%2Caps%2C64&sr=8-1'  # Replace with the product URL
     details = scrape_amazon_product(url)
     if details:
         for key, value in details.items():

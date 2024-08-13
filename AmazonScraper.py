@@ -34,7 +34,7 @@ def __GetAmazonHTML(query, country):
     # Build the URL
     parsedQuery = urllib.parse.quote(query).replace('%20', '+')
     url = f'https://www.amazon{countryDict[country]}/s?k=' + parsedQuery
-
+    st.write(url)
     # Get the web page HTML
     request = urllib.request.urlopen(url)
     soup = BeautifulSoup(request.read(), 'html.parser')
