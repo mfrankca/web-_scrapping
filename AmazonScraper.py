@@ -10,7 +10,7 @@ from io import BytesIO
 import urllib.parse
 import urllib.request
 from bs4 import BeautifulSoup
-
+import os
 
 def scrape_amazon(item):
     url = f'https://www.amazon.com//itm/{item}'

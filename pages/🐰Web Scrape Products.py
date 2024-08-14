@@ -1,15 +1,45 @@
-
 import requests
-import EbayScraper
-import AmazonScraper
-import streamlit as st
-
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-import urllib.parse
-import urllib.request
 from bs4 import BeautifulSoup
+import os
+
+def scrape_ebay(item_id):
+    # Implement eBay scraping logic here
+    return {"Item ID": item_id, "Title": "Sample eBay Title"}
+
+def scrape_amazon(item_id):
+    # Implement Amazon scraping logic here
+    return {"Item ID": item_id, "Title": "Sample Amazon Title"}
+
+def scrape_walmart(item_id):
+    # Implement Walmart scraping logic here
+    return {"Item ID": item_id, "Title": "Sample Walmart Title"}
+
+def scrape_product_data(store, item_id):
+    if store == "eBay":
+        return scrape_ebay(item_id)
+    elif store == "Amazon":
+        return scrape_amazon(item_id)
+    elif store == "Walmart":
+        return scrape_walmart(item_id)
+    else:
+        return {}
+
+def perform_web_scraping(input_file):
+    # Determine the file type and read the data accordingly
+    _, file_extension = os.path.splitext(input_file.name)
+    
+    if file_extension == '.csv':
+        listings = pd.read_csv(input_file)
+    elif file_extension == '.txt':
+        listings = pd.read_csv(input_file, header=None, names=['Item ID'])
+    else:
+        st.error("Unsupported file type. Please upload a CSV or TXT file.")
+        return pd.DataFrame()
+
+    return listings
 
 def display_sidebar():
     """
@@ -42,52 +72,52 @@ def display_sidebar():
         Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
         """)
 
- 
 st.title('Product Data Scraper')
-
 display_sidebar()
-            
+
 # Dropdown to select the e-commerce store
 store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
-            
-# File uploader for product descriptions
-uploaded_file = st.file_uploader("Upload a file with product descriptions", type=["csv", "xlsx"])
 
-# Dropdown to select the country
-#country = st.selectbox("Select Country", list(EbayScraper.countryDict.keys()))
+# Upload text file with listing IDs
+uploaded_file = st.file_uploader('Choose a file (CSV or TXT)', type=['csv', 'txt'])
 
+# Output format selection
+output_format = st.selectbox('Select output format', ['Excel', 'CSV'])
 
 if uploaded_file is not None:
-# Read the uploaded file
-        if uploaded_file.name.endswith('.csv'):
-           product_df = pd.read_csv(uploaded_file)
-        else:
-           product_df = pd.read_excel(uploaded_file)
-
-        st.write("Product Descriptions:")
-        st.dataframe(product_df)
+    listings = perform_web_scraping(uploaded_file)
+    if not listings.empty:
+        st.write("Listing IDs:")
+        st.dataframe(listings)
 
         # Button to start scraping
         if st.button('Scrape Product Data'):
-           all_products_data = []
+            all_products_data = []
+            
+            for item_id in listings['Item ID']:
+                st.write(f"Scraping data for: {item_id}")
+                product_data = scrape_product_data(store, item_id)
+                all_products_data.append(product_data)
 
-           for product in product_df['Product']:
-                st.write(f"Scraping data for: {product}")
-                product_data = scrape_product_data(store, product, country)
-                all_products_data.extend(product_data)
+            result_df = pd.DataFrame(all_products_data)
 
-                # Convert the list of dictionaries to a pandas DataFrame
-                result_df = pd.DataFrame(all_products_data)
-
-                # Save the DataFrame to an Excel file
+            if output_format == 'Excel':
                 excel_buffer = BytesIO()
                 result_df.to_excel(excel_buffer, index=False)
                 excel_buffer.seek(0)
 
-                # Download link for the Excel file
                 st.download_button(
-                label="Download Excel file",
-                data=excel_buffer,
-                file_name="product_data.xlsx",
-                mime="application/vnd.ms-excel"
+                    label="Download Excel file",
+                    data=excel_buffer,
+                    file_name="product_data.xlsx",
+                    mime="application/vnd.ms-excel"
+                )
+            elif output_format == 'CSV':
+                csv_buffer = result_df.to_csv(index=False).encode('utf-8')
+
+                st.download_button(
+                    label="Download CSV file",
+                    data=csv_buffer,
+                    file_name="product_data.csv",
+                    mime="text/csv"
                 )
