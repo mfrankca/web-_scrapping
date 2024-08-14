@@ -41,10 +41,34 @@ def display_sidebar():
 
         Supported feedback sites: **eBay Feedback Site 1**, **eBay Feedback Site 2**.
         """)
+# Connect to Website and pull in data
+#URL = 'https://www.amazon.com/Funny-Data-Systems-Business-Analyst/dp/B07FNW9FGJ/ref=sr_1_3?dchild=1&keywords=data%2Banalyst%2Btshirt&qid=1626655184&sr=8-3&customId=B0752XJYNL&th=1'
 
- 
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "DNT": "1",
+    "Connection": "close",
+    "Upgrade-Insecure-Requests": "1"
+}
+
+# Function to handle scraping from different e-commerce stores
+def scrape_product_data():
+    if store == 'eBay':
+        return EbayScraper.Items()
+    elif store == 'Amazon':
+        return AmazonScraper.perform_web_scraping()
+    elif store == 'Walmart':
+        # Implement scraping logic for Walmart here
+        pass
+
+    return []
+
+# Streamlit app
+
+    
 st.title('Product Data Scraper')
-
 display_sidebar()
             
 # Dropdown to select the e-commerce store
