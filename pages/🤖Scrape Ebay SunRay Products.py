@@ -215,18 +215,19 @@ def perform_web_scraping(input_filepath):
 def generate_output_files(data, output_format):
     output_files = []
     df = pd.DataFrame(data)
-
-    columns_order = [
-    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
-    'Lens Material','Department',  
-    'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
-    'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
-]
-    # Convert the data to a DataFrame
-    #df = pd.DataFrame([data], columns=columns_order)
-    filtered_df = df[columns_order]
-    
+    try:
+        columns_order = [
+        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
+        'Lens Material','Department',  
+        'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
+        'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
+    ]
+        # Convert the data to a DataFrame
+        #df = pd.DataFrame([data], columns=columns_order)
+        filtered_df = df[columns_order]
+    except:
+        filtered_df=df
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
         filtered_df.to_excel(excel_file, index=False)

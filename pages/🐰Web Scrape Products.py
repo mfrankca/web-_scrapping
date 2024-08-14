@@ -79,10 +79,10 @@ display_sidebar()
 store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
 
 # Upload text file with listing IDs
-uploaded_file = st.file_uploader('Choose a file (CSV or TXT)', type=['csv', 'txt'])
+#uploaded_file = st.file_uploader('Choose a file (CSV or TXT)', type=['csv', 'txt'],key="listing_file_uploader")
 
 # Output format selection
-output_format = st.selectbox('Select output format', ['Excel', 'CSV'])
+output_format = st.selectbox('Select output format', ['Excel', 'CSV'],key="output_format_selector")
 
 if uploaded_file is not None:
     listings = perform_web_scraping(uploaded_file)
