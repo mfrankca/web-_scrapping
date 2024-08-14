@@ -227,7 +227,17 @@ def generate_output_files(data, output_format):
         #df = pd.DataFrame([data], columns=columns_order)
         filtered_df = df[columns_order]
     except:
-        filtered_df=df
+        df['Lens Socket Width']=''
+        df['Features']=''
+        df['Bridge Width']=''
+        columns_order = [
+        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
+        'Lens Material','Department',  
+        'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
+        'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
+    ]
+        filtered_df = df[columns_order]
     if 'Excel' in output_format :
         excel_file = 'output.xlsx'
         filtered_df.to_excel(excel_file, index=False)
