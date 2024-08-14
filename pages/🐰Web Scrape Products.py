@@ -54,7 +54,7 @@ headers = {
 }
 
 # Function to handle scraping from different e-commerce stores
-def scrape_product_data(store, query, country):
+def scrape_product_data():
     if store == 'eBay':
         return EbayScraper.Items()
     elif store == 'Amazon':
@@ -67,11 +67,10 @@ def scrape_product_data(store, query, country):
 
 # Streamlit app
 def main():
-    st.title('Product Data Scraper')
-
     
+    st.title('Product Data Scraper')
     display_sidebar()
-
+    
     # Dropdown to select the e-commerce store
     store = st.selectbox("Select e-commerce Store", ["eBay", "Amazon", "Walmart"])
     
