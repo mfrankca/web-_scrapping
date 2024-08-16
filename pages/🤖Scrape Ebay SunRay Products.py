@@ -221,7 +221,7 @@ def generate_output_files(data, output_format):
         'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
         'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
         'Lens Material', 'Department',  
-        'Lens Socket Width',  'Eye', 'Bridge Width', 'Bridge', 'Vertical',  'Temple Length', 
+        'Lens Socket Width', 'Eye', 'Bridge Width', 'Bridge', 'Vertical', 'Temple Length', 
         'Country/Region of Manufacture', 'UPC'
     ]
 
@@ -230,8 +230,8 @@ def generate_output_files(data, output_format):
         if column not in df.columns:
             df[column] = ""
 
-    # Update 'Lens Socket Width' with 'Eye' if 'Eye' is not empty
-    df['Lens Socket Width'] = df.apply(lambda row: row['Eye'] if row['Eye'] else row['Lens Socket Width'], axis=1)
+    # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty and 'Eye' is not empty
+    df['Lens Socket Width'] = df.apply(lambda row: row['Eye'] if not row['Lens Socket Width'] and row['Eye'] else row['Lens Socket Width'], axis=1)
 
     # Update 'Bridge Width' with 'Bridge' if 'Bridge' is not empty
     df['Bridge Width'] = df.apply(lambda row: row['Bridge'] if row['Bridge'] else row['Bridge Width'], axis=1)
@@ -256,6 +256,7 @@ def generate_output_files(data, output_format):
         output_files.append(csv_file)
 
     return output_files
+
 
 #image_path = "uploads//logo.png"
 #st.sidebar.image(image_path, use_column_width=True)

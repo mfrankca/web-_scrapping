@@ -1,30 +1,73 @@
 import streamlit as st
-
-
+import requests 
+from bs4 import BeautifulSoup 
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+import time
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.os_manager import ChromeType
-import re
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import chromedriver_autoinstaller
-   
- # Automatically download and install the correct version of chromedriver
-chromedriver_autoinstaller.install()
 
-# Set up headless Chrome
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+username = "reddiveusa@gmail.com" 
+password = "Profit44" 
 
-# Initialize the WebDriver
-driver = webdriver.Chrome(options=chrome_options)
+# Initialize Selenium WebDriver
 
-driver.get("https://www.ebay.com/fdbk/feedback_profile/sunraycity")
-st.write(driver.title)
-driver.quit()
+def get_website_content(url):
+    driver = None
+    try:
+        # Using on Local
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        #options.add_argument('--disable-gpu')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                                  options=options)
+        st.write(f"DEBUG:DRIVER:{driver}")
+        st.write(url)
+        driver.get(url)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        feedback_table = soup.find('table', id='feedback-cards')
+
+        #driver.quit()
+    
+        return feedback_table
+    except Exception as e:
+        st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+    finally:
+        if driver is not None: driver.quit()
+
+
+# ---------------- Page & UI/UX Components ------------------------
+def main_sidebar():
+    # 1.Vertical Menu
+    st.header("Running Selenium on Streamlit Cloud")
+    site_extraction_page()
+
+
+def site_extraction_page():
+    SAMPLE_URL = 'https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST'
+    url = st.text_input(label="URL", placeholder='https://www.ebay.com/fdbk/feedback_profile/sunraycity?sort=NEWEST', value=SAMPLE_URL)
+
+    clicked = st.button("Load Page Content",type="primary")
+    if clicked:
+        with st.container(border=True):
+            with st.spinner("Loading page website..."):
+                content = get_website_content(url)
+                st.write(content)
+
+
+if __name__ == "__main__":
+    main_sidebar()
+  
+
+"""   
+url = 'https://www.ebay.com/itm/294453072910'
+response = requests.get(url)
+soup = BeautifulSoup(response.content, 'html.parser')
+
+title_element = soup.find('h1', attrs={'class': 'x-item-title__mainTitle'})
+title=title_element.text.replace('Details about', '').strip() if title_element else 'Not Available'
+st.write(title)
+"""
