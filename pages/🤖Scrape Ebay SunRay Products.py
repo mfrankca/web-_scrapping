@@ -229,9 +229,12 @@ def generate_output_files(data, output_format):
     for column in columns_order:
         if column not in df.columns:
             df[column] = ""
-
+    st.write(df['Eye'])
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty and 'Eye' is not empty
-    df['Lens Socket Width'] = df.apply(lambda row: row['Eye'] if not row['Lens Socket Width'] and row['Eye'] else row['Lens Socket Width'], axis=1)
+    if df['Eye'] is None:
+        df['Lens Socket Width'] 
+    else:
+       df['Lens Socket Width'] =df['Eye'] 
 
     # Update 'Bridge Width' with 'Bridge' if 'Bridge' is not empty
     df['Bridge Width'] = df.apply(lambda row: row['Bridge'] if row['Bridge'] else row['Bridge Width'], axis=1)
