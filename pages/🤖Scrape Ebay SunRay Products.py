@@ -231,7 +231,7 @@ def generate_output_files(data, output_format):
             df[column] = ""
     st.write(df['Eye'])
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty and 'Eye' is not empty
-    if pd.isna(df['Eye']):
+    if df['Eye']== '':
         df['Lens Socket Width'] 
     else:
        df['Lens Socket Width'] =df['Eye'] 
