@@ -230,31 +230,30 @@ def generate_output_files(data, output_format):
         if column not in df.columns:
             df[column] = ""
 
+    # Update 'Lens Socket Width' with 'Eye' if 'Eye' is not empty
+    df['Lens Socket Width'] = df.apply(lambda row: row['Eye'] if row['Eye'] else row['Lens Socket Width'], axis=1)
+
+    # Update 'Bridge Width' with 'Bridge' if 'Bridge' is not empty
+    df['Bridge Width'] = df.apply(lambda row: row['Bridge'] if row['Bridge'] else row['Bridge Width'], axis=1)
+
     # Reorder the columns as per the desired order
     filtered_df = df[columns_order]
-    df['Lens Socket Width']=''
-    df['Features']=''
-    df['Bridge Width']=''
-    columns_order = [
-        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material','Style', 'Features', 'Lens Color','Lens Technology',
-        'Lens Material','Department',  
-        'Lens Socket Width',  'Eye','Bridge Width', 'Bridge',
-        'Vertical',  'Temple Length', 'Country/Region of Manufacture', 'UPC'
-    ]
-    filtered_df = df[columns_order]
-    if 'Excel' in output_format :
+
+    # Generate the output files in the selected format(s)
+    if 'Excel' in output_format:
         excel_file = 'output.xlsx'
         filtered_df.to_excel(excel_file, index=False)
         output_files.append(excel_file)
-    if 'JSON' in output_format :
+        
+    if 'JSON' in output_format:
         json_file = 'output.json'
         filtered_df.to_json(json_file, orient='records')
         output_files.append(json_file)
+        
     if 'CSV' in output_format:
         csv_file = 'output.csv'
         filtered_df.to_csv(csv_file, index=False)
-        output_files.append(csv_file) 
+        output_files.append(csv_file)
 
     return output_files
 
