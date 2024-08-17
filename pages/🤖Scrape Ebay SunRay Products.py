@@ -232,12 +232,12 @@ def generate_output_files(data, output_format):
   
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty or None, and 'Eye' is not empty
     df['Lens Socket Width'] = df.apply(
-    lambda row: row['Eye'] if (pd.isna(row['Lens Socket Width']) or row['Lens Socket Width'].strip() == '') and row['Eye'].strip() != '' else row['Lens Socket Width'], axis=1
+    lambda row: row['Eye'] if (pd.isna(row['Lens Socket Width']) or row['Lens Socket Width'].strip() == '')  else row['Lens Socket Width'], axis=1
 )
 
     # Update 'Bridge Width' with 'Bridge' if 'Bridge Width' is empty or None, and 'Bridge' is not empty
     df['Bridge Width'] = df.apply(
-    lambda row: row['Bridge'] if (pd.isna(row['Bridge Width']) or row['Bridge Width'].strip() == '') and row['Bridge'].strip() != '' else row['Bridge Width'], axis=1
+    lambda row: row['Bridge'] if (pd.isna(row['Bridge Width']) or row['Bridge Width'].strip() == '')  else row['Bridge Width'], axis=1
 )
     columns_order = [
         'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
