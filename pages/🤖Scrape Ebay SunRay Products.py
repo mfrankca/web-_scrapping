@@ -231,9 +231,10 @@ def generate_output_files(data, output_format):
             df[column] = ""
     st.write(df['Eye'])
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is an empty string and 'Eye' is not an empty string
-    df['Lens Socket Width'] = df.apply(
-    lambda row: row['Eye'] if row['Lens Socket Width'] == '' and row['Eye'] != '' else row['Lens Socket Width'], axis=1
-)
+    if df['Eye'] != '':
+        df['Lens Socket Width'] = df['Eye']
+    else:
+        df['Lens Socket Width']
     # Update 'Bridge Width' with 'Bridge' if 'Bridge' is not empty
     df['Bridge Width'] = df.apply(lambda row: row['Bridge'] if row['Bridge'] else row['Bridge Width'], axis=1)
 
