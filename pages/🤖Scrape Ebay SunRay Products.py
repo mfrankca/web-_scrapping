@@ -230,12 +230,10 @@ def generate_output_files(data, output_format):
         if column not in df.columns:
             df[column] = ""
     st.write(df['Eye'])
-    # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty and 'Eye' is not empty
-    if df['Eye']== '':
-        df['Lens Socket Width'] 
-    else:
-       df['Lens Socket Width'] =df['Eye'] 
-
+    # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is an empty string and 'Eye' is not an empty string
+    df['Lens Socket Width'] = df.apply(
+    lambda row: row['Eye'] if row['Lens Socket Width'] == '' and row['Eye'] != '' else row['Lens Socket Width'], axis=1
+)
     # Update 'Bridge Width' with 'Bridge' if 'Bridge' is not empty
     df['Bridge Width'] = df.apply(lambda row: row['Bridge'] if row['Bridge'] else row['Bridge Width'], axis=1)
 
