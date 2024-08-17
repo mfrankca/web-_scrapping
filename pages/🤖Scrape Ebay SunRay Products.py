@@ -221,7 +221,7 @@ def generate_output_files(data, output_format):
         'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
         'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
         'Lens Material', 'Department',  
-        'Lens Socket Width', 'Bridge Width', 'Vertical', 'Temple Length', 
+        'Lens Socket Width', 'Eye', 'Bridge Width', 'Bridge', 'Vertical', 'Temple Length', 
         'Country/Region of Manufacture', 'UPC'
     ]
 
@@ -229,7 +229,7 @@ def generate_output_files(data, output_format):
     for column in columns_order:
         if column not in df.columns:
             df[column] = ""
-    st.write(df['Eye'])
+  
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty or None, and 'Eye' is not empty
     df['Lens Socket Width'] = df.apply(
     lambda row: row['Eye'] if (pd.isna(row['Lens Socket Width']) or row['Lens Socket Width'].strip() == '') and row['Eye'].strip() != '' else row['Lens Socket Width'], axis=1
@@ -239,6 +239,13 @@ def generate_output_files(data, output_format):
     df['Bridge Width'] = df.apply(
     lambda row: row['Bridge'] if (pd.isna(row['Bridge Width']) or row['Bridge Width'].strip() == '') and row['Bridge'].strip() != '' else row['Bridge Width'], axis=1
 )
+    columns_order = [
+        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
+        'Lens Material', 'Department',  
+        'Lens Socket Width', 'Bridge Width',  'Vertical', 'Temple Length', 
+        'Country/Region of Manufacture', 'UPC'
+    ]
 
     # Reorder the columns as per the desired order
     filtered_df = df[columns_order]
