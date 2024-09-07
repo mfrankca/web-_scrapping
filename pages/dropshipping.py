@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from io import BytesIO
 
 # Function to parse and reformat the Excel file
 def process_excel(file):
@@ -57,6 +58,15 @@ def process_excel(file):
     
     return output_df
 
+
+# Convert DataFrame to Excel format and return as a BytesIO object
+def to_excel(df):
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False)
+    output.seek(0)
+    return output
+
 # Streamlit App
 st.title("Excel File Parser")
 
@@ -74,9 +84,10 @@ if uploaded_file:
     # Provide option to download the processed file
     download_link = processed_data.to_excel(index=False)
 
+ # Provide download button
     st.download_button(
         label="Download Processed Excel File",
-        data=download_link,
+        data=processed_excel,
         file_name="processed_file.xlsx",
-        mime='application/octet-stream'
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
