@@ -27,12 +27,12 @@ def process_excel(file):
     output_df['Listing ID'] = df['Listing ID'] if 'Listing ID' in df.columns else ''
     output_df['Title'] = df['Title'] if 'Title' in df.columns else ''
     output_df['Type'] = df['Type'] if 'Type' in df.columns else ''
-    output_df['Seller'] = df['Seller'] if 'Seller' in df.columns else ''
+    output_df['Seller'] = df['Brand'] if 'Seller' in df.columns else ''
     output_df['Price'] = df['Price'] if 'Price' in df.columns else ''
-    output_df['Quantity'] = df['Quantity'] if 'Quantity' in df.columns else ''
+    output_df['Quantity'] = df['Quantity Available'] if 'Quantity' in df.columns else ''
     
     # For image URLs, map them from the file if they exist, else leave blank
-    output_df['Image URL 1'] = df['Image URL 1'] if 'Image URL 1' in df.columns else ''
+    output_df['Image URL 1'] = df['Image Src'] if 'Image URL 1' in df.columns else ''
     output_df['Image URL 2'] = df['Image URL 2'] if 'Image URL 2' in df.columns else ''
     output_df['Image URL 3'] = df['Image URL 3'] if 'Image URL 3' in df.columns else ''
     
@@ -53,7 +53,7 @@ def process_excel(file):
     output_df['Vertical'] = df['Vertical'] if 'Vertical' in df.columns else ''
     output_df['Temple Length'] = df['Temple Length'] if 'Temple Length' in df.columns else ''
     output_df['Country/Region of Manufacture'] = df['Country/Region of Manufacture'] if 'Country/Region of Manufacture' in df.columns else ''
-    output_df['UPC'] = df['UPC'] if 'UPC' in df.columns else ''
+    output_df['UPC'] = df['Variant Barcode'] if 'UPC' in df.columns else ''
     
     return output_df
 
@@ -73,10 +73,10 @@ if uploaded_file:
     
     # Provide option to download the processed file
     download_link = processed_data.to_excel(index=False)
-    
+
     st.download_button(
         label="Download Processed Excel File",
         data=download_link,
         file_name="processed_file.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        mime='application/octet-stream'
     )
