@@ -1,71 +1,82 @@
-import pandas as pd
-from bs4 import BeautifulSoup
 import streamlit as st
+import pandas as pd
 
-def upload_file_ui():
-    """
-    Streamlit UI component for uploading a file.
+# Function to parse and reformat the Excel file
+def process_excel(file):
+    # Read the uploaded Excel file
+    df = pd.read_excel(file)
     
-    This function provides an interface for users to upload either an Excel or CSV file. 
-    It supports 'xlsx', 'xls', and 'csv' file formats based on the user's selection.
+    # Define the columns in the expected format
+    expected_columns = [
+        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 
+        'Image URL 1', 'Image URL 2', 'Image URL 3', 
+        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 
+        'Features', 'Lens Color', 'Lens Technology', 'Lens Material', 'Department',
+        'Lens Socket Width', 'Bridge Width', 'Vertical', 'Temple Length', 
+        'Country/Region of Manufacture', 'UPC'
+    ]
     
-    Returns:
-        pd.DataFrame or None: A pandas DataFrame if a file is successfully uploaded and parsed, 
-                              None otherwise.
-    """
-    # Allow user to select the file type
-    file_type = st.selectbox("Select file type", ["Excel", "CSV"])
+    # Create a new dataframe with the expected format
+    output_df = pd.DataFrame(columns=expected_columns)
     
-    # Define the allowed file types for the uploader based on the user's selection
-    allowed_types = ["xlsx", "xls"] if file_type == "Excel" else ["csv"]
+    # Assuming the uploaded file has relevant columns, you can map them here
+    # Update column names and fill the output dataframe accordingly
+    # Example: If the input has similar columns, map them directly, else leave empty
     
-    # Create a file uploader widget
-    uploaded_file = st.file_uploader("Upload your file", type=allowed_types)
+    # Map relevant columns (this should be updated based on actual input file structure)
+    output_df['Listing ID'] = df['Listing ID'] if 'Listing ID' in df.columns else ''
+    output_df['Title'] = df['Title'] if 'Title' in df.columns else ''
+    output_df['Type'] = df['Type'] if 'Type' in df.columns else ''
+    output_df['Seller'] = df['Seller'] if 'Seller' in df.columns else ''
+    output_df['Price'] = df['Price'] if 'Price' in df.columns else ''
+    output_df['Quantity'] = df['Quantity'] if 'Quantity' in df.columns else ''
     
-    # Process the uploaded file if available
-    if uploaded_file is not None:
-        if file_type == "Excel":
-            df = pd.read_excel(uploaded_file)
-        else:
-            df = pd.read_csv(uploaded_file)
-        return df
-    return None
+    # For image URLs, map them from the file if they exist, else leave blank
+    output_df['Image URL 1'] = df['Image URL 1'] if 'Image URL 1' in df.columns else ''
+    output_df['Image URL 2'] = df['Image URL 2'] if 'Image URL 2' in df.columns else ''
+    output_df['Image URL 3'] = df['Image URL 3'] if 'Image URL 3' in df.columns else ''
+    
+    # Map the rest of the columns
+    output_df['Brand'] = df['Brand'] if 'Brand' in df.columns else ''
+    output_df['Model'] = df['Model'] if 'Model' in df.columns else ''
+    output_df['MPN'] = df['MPN'] if 'MPN' in df.columns else ''
+    output_df['Frame Color'] = df['Frame Color'] if 'Frame Color' in df.columns else ''
+    output_df['Frame Material'] = df['Frame Material'] if 'Frame Material' in df.columns else ''
+    output_df['Style'] = df['Style'] if 'Style' in df.columns else ''
+    output_df['Features'] = df['Features'] if 'Features' in df.columns else ''
+    output_df['Lens Color'] = df['Lens Color'] if 'Lens Color' in df.columns else ''
+    output_df['Lens Technology'] = df['Lens Technology'] if 'Lens Technology' in df.columns else ''
+    output_df['Lens Material'] = df['Lens Material'] if 'Lens Material' in df.columns else ''
+    output_df['Department'] = df['Department'] if 'Department' in df.columns else ''
+    output_df['Lens Socket Width'] = df['Lens Socket Width'] if 'Lens Socket Width' in df.columns else ''
+    output_df['Bridge Width'] = df['Bridge Width'] if 'Bridge Width' in df.columns else ''
+    output_df['Vertical'] = df['Vertical'] if 'Vertical' in df.columns else ''
+    output_df['Temple Length'] = df['Temple Length'] if 'Temple Length' in df.columns else ''
+    output_df['Country/Region of Manufacture'] = df['Country/Region of Manufacture'] if 'Country/Region of Manufacture' in df.columns else ''
+    output_df['UPC'] = df['UPC'] if 'UPC' in df.columns else ''
+    
+    return output_df
 
-# Load the Excel file
-#file_path = 'your_file.xlsx'  # Update with your file path
-df = upload_file_ui()
+# Streamlit App
+st.title("Excel File Parser")
 
-# Function to parse HTML and extract data
-def parse_html(html):
-    soup = BeautifulSoup(html, 'html.parser')
-    data = {}
+# File uploader
+uploaded_file = st.file_uploader("Upload an Excel file", type=["xlsx"])
+
+if uploaded_file:
+    # Process the uploaded Excel file
+    processed_data = process_excel(uploaded_file)
     
-    # Find all <li> elements
-    for li in soup.find_all('li'):
-        text = li.get_text()
-        # Split by the delimiter " - " to separate the key and value
-        if ' - ' in text:
-            key, value = text.split(' - ', 1)
-            data[key.strip()] = value.strip()
+    # Display the processed data
+    st.write("Processed Data Preview:")
+    st.dataframe(processed_data.head())
     
-    # Add any additional details from the <p> or <em> tags if needed
-    em_text = soup.find('em')
-    if em_text:
-        data['Note'] = em_text.get_text().strip()
+    # Provide option to download the processed file
+    download_link = processed_data.to_excel(index=False)
     
-    return data
-
-# Parse the HTML content in the 'Description (HTML)' column
-parsed_data = df['Description (HTML)'].apply(parse_html)
-
-# Create a DataFrame from the parsed data
-parsed_df = pd.json_normalize(parsed_data)
-
-# Combine the original DataFrame with the parsed data
-result_df = pd.concat([df, parsed_df], axis=1)
-
-# Save the result to a new Excel file
-output_file_path = 'parsed_output.xlsx'  # Update with your desired output file path
-result_df.to_excel(output_file_path, index=False)
-
-st.write(f'Parsed data saved to {output_file_path}')
+    st.download_button(
+        label="Download Processed Excel File",
+        data=download_link,
+        file_name="processed_file.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
