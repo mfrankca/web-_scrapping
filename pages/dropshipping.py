@@ -28,9 +28,9 @@ def process_excel(file):
     output_df['Listing ID'] = df['Listing ID'] if 'Listing ID' in df.columns else ''
     output_df['Title'] = df['Title'] if 'Title' in df.columns else ''
     output_df['Type'] = df['Type'] if 'Type' in df.columns else ''
-    output_df['Seller'] = df['Brand'] if 'Seller' in df.columns else ''
+    output_df['Seller'] = df['Brand'] if 'Brand' in df.columns else ''
     output_df['Price'] = df['Price'] if 'Price' in df.columns else ''
-    output_df['Quantity'] = df['Quantity Available'] if 'Quantity' in df.columns else ''
+    output_df['Quantity'] = df['Quantity Available'] if 'Quantity Available' in df.columns else ''
     
     # For image URLs, map them from the file if they exist, else leave blank
     output_df['Image URL 1'] = df['Image Src'] if 'Image URL 1' in df.columns else ''
