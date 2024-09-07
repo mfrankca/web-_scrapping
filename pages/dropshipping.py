@@ -25,7 +25,7 @@ def process_excel(file):
     # Example: If the input has similar columns, map them directly, else leave empty
     
     # Map relevant columns (this should be updated based on actual input file structure)
-    output_df['Listing ID'] = df['Listing ID'] if 'Listing ID' in df.columns else ''
+    output_df['Listing ID'] = df['UPC'] if 'UPC' in df.columns else ''
     output_df['Title'] = df['Title'] if 'Title' in df.columns else ''
     output_df['Type'] = df['Product Category'] if 'Product Category' in df.columns else ''
     output_df['Seller'] = df['Brand'] if 'Brand' in df.columns else ''
@@ -33,7 +33,7 @@ def process_excel(file):
     output_df['Quantity'] = df['Quantity Available'] if 'Quantity Available' in df.columns else ''
     
     # For image URLs, map them from the file if they exist, else leave blank
-    output_df['Image URL 1'] = df['Image Src'] if 'mage Src' in df.columns else ''
+    output_df['Image URL 1'] = df['Image Src'] if 'Image Src' in df.columns else ''
     output_df['Image URL 2'] = df['Image URL 2'] if 'Image URL 2' in df.columns else ''
     output_df['Image URL 3'] = df['Image URL 3'] if 'Image URL 3' in df.columns else ''
     
