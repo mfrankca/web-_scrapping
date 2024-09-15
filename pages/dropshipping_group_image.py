@@ -9,7 +9,7 @@ def process_excel(file):
     df = pd.read_excel(file)
     
     # Step 1: Group by products and consolidate 'Image Src'
-    grouped_df = df.groupby('Product ID').agg({
+    grouped_df = df.groupby('SKU').agg({
         'Title': 'first',
         'Type': 'first',
         'Seller': 'first',
