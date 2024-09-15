@@ -23,9 +23,9 @@ def process_excel(file):
     }).reset_index()
     
     # Separate the images into separate columns
-    grouped_df['Image Src1'] = grouped_df['Image Src'].apply(lambda x: x[0] if len(x) > 0 else '')
-    grouped_df['Image Src2'] = grouped_df['Image Src'].apply(lambda x: x[1] if len(x) > 1 else '')
-    grouped_df['Image Src3'] = grouped_df['Image Src'].apply(lambda x: x[2] if len(x) > 2 else '')
+    grouped_df['Image URL 1'] = grouped_df['Image Src'].apply(lambda x: x[0] if len(x) > 0 else '')
+    grouped_df['Image URL 2'] = grouped_df['Image Src'].apply(lambda x: x[1] if len(x) > 1 else '')
+    grouped_df['Image URL 3'] = grouped_df['Image Src'].apply(lambda x: x[2] if len(x) > 2 else '')
     
     # Drop the 'Image Src' list column as we now have separate columns
     grouped_df = grouped_df.drop(columns=['Image Src'])
