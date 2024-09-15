@@ -53,7 +53,8 @@ def process_excel(file):
     final_df = pd.concat([grouped_df.drop(columns=['Description (HTML)', 'Parsed Description']), parsed_df], axis=1)
     
      # Step 3: Map the columns to the expected format
-    
+    final_df['Actual Price'] = final_df['Price'] * 2
+    final_df['Listing ID'] = final_df['Variant Barcode']
     return final_df
 
 # Function to convert DataFrame to Excel and return BytesIO object
