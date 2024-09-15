@@ -11,10 +11,13 @@ def process_excel(file):
     # Step 1: Group by products and consolidate 'Image Src'
     grouped_df = df.groupby('SKU').agg({
         'Title': 'first',
+        'Brand': 'first',
+        'Product Category': 'first',
         'Type': 'first',
-        'Seller': 'first',
+        'Tag':'first',
         'Price': 'first',
-        'Quantity': 'first',
+        'Variant Barcode' : 'first',
+        'Quantity Available': 'first',
         'Image Src': lambda x: list(x),  # Aggregate images into a list
         'Description (HTML)': 'first'  # Take the first occurrence of the HTML description
     }).reset_index()
