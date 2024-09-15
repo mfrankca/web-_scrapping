@@ -31,22 +31,28 @@ def process_excel(file):
     grouped_df = grouped_df.drop(columns=['Image Src'])
     
     # Step 2: Parse HTML from 'Description (HTML)' column
+      # Step 2: Parse HTML from 'Description (HTML)' column
     def parse_description(html):
         soup = BeautifulSoup(html, 'html.parser')
-        list_items = [li.get_text() for li in soup.find_all('li')]  # Extract all <li> tags
-        return list_items
+        description_dict = {}
+        for li in soup.find_all('li'):
+            if '-' in li.get_text():
+                key, value = li.get_text().split('-', 1)
+                key = key.strip()  # Column name
+                value = value.strip()  # Column value
+                description_dict[key] = value
+        return description_dict
     
-    # Apply the HTML parsing and create separate columns for each list item
-    grouped_df['Description Parsed'] = grouped_df['Description (HTML)'].apply(parse_description)
+    # Apply the HTML parsing and create new columns for each parsed item
+    grouped_df['Parsed Description'] = grouped_df['Description (HTML)'].apply(parse_description)
     
-    # Create separate columns for each <li> element (assuming up to 5 list items)
-    for i in range(5):  # Adjust the range if more list items are expected
-        grouped_df[f'Description Item {i+1}'] = grouped_df['Description Parsed'].apply(lambda x: x[i] if len(x) > i else '')
+    # Expand the dictionary into separate columns
+    parsed_df = grouped_df['Parsed Description'].apply(pd.Series)
     
-    # Drop the intermediate 'Description Parsed' column
-    grouped_df = grouped_df.drop(columns=['Description Parsed'])
+    # Concatenate the new parsed columns with the original dataframe
+    final_df = pd.concat([grouped_df.drop(columns=['Description (HTML)', 'Parsed Description']), parsed_df], axis=1)
     
-    return grouped_df
+    return final_df
 
 # Function to convert DataFrame to Excel and return BytesIO object
 def to_excel(df):
