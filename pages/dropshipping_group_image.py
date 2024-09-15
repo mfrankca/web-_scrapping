@@ -14,7 +14,7 @@ def process_excel(file):
         'Brand': 'first',
         'Product Category': 'first',
         'Type': 'first',
-        'Tag':'first',
+        'Tags':'first',
         'Price': 'first',
         'Variant Barcode' : 'first',
         'Quantity Available': 'first',
