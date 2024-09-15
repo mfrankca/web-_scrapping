@@ -52,7 +52,57 @@ def process_excel(file):
     # Concatenate the new parsed columns with the original dataframe
     final_df = pd.concat([grouped_df.drop(columns=['Description (HTML)', 'Parsed Description']), parsed_df], axis=1)
     
-    return final_df
+     # Step 3: Map the columns to the expected format
+    
+    # Define the columns in the expected format
+    expected_columns = [
+        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 
+        'Image URL 1', 'Image URL 2', 'Image URL 3', 
+        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 
+        'Features', 'Lens Color', 'Lens Technology', 'Lens Material', 'Department',
+        'Lens Socket Width', 'Bridge Width', 'Vertical', 'Temple Length', 
+        'Country/Region of Manufacture', 'UPC'
+    ]
+    
+    # Create a new dataframe with the expected format
+    output_df = pd.DataFrame(columns=expected_columns)
+    
+    # Assuming the uploaded file has relevant columns, you can map them here
+    # Map relevant columns (update based on actual input file structure)
+    output_df['Listing ID'] = df['UPC'] if 'UPC' in df.columns else ''
+    output_df['Title'] = df['Title'] if 'Title' in df.columns else ''
+    output_df['Type'] = df['Product Category'] if 'Product Category' in df.columns else ''
+    output_df['Seller'] = df['Brand'] if 'Brand' in df.columns else ''
+    output_df['Price'] = df['Price'] if 'Price' in df.columns else ''
+    output_df['Quantity'] = df['Quantity Available'] if 'Quantity Available' in df.columns else ''
+    
+    # For image URLs, map them from the file if they exist, else leave blank
+    output_df['Image URL 1'] = final_df['Image URL 1']
+    output_df['Image URL 2'] = final_df['Image URL 2']
+    output_df['Image URL 3'] = final_df['Image URL 3']
+    
+    # Map other relevant columns
+    output_df['Brand'] = df['Brand'] if 'Brand' in df.columns else ''
+    output_df['Model'] = df['Model'] if 'Model' in df.columns else ''
+    output_df['MPN'] = df['MPN'] if 'MPN' in df.columns else ''
+    output_df['Frame Color'] = final_df['Frame Color'] if 'Frame Color' in final_df.columns else ''
+    output_df['Frame Material'] = final_df['Frame Material'] if 'Frame Material' in final_df.columns else ''
+    output_df['Style'] = final_df['Style'] if 'Style' in final_df.columns else ''
+    output_df['Features'] = final_df['Features'] if 'Features' in final_df.columns else ''
+    output_df['Lens Color'] = final_df['Lens Color'] if 'Lens Color' in final_df.columns else ''
+    output_df['Lens Technology'] = final_df['Lens Technology'] if 'Lens Technology' in final_df.columns else ''
+    output_df['Lens Material'] = final_df['Lens Material'] if 'Lens Material' in final_df.columns else ''
+    output_df['Department'] = final_df['Department'] if 'Department' in final_df.columns else ''
+    output_df['Lens Socket Width'] = final_df['Lens Socket Width'] if 'Lens Socket Width' in final_df.columns else ''
+    output_df['Bridge Width'] = final_df['Bridge Width'] if 'Bridge Width' in final_df.columns else ''
+    output_df['Vertical'] = final_df['Vertical'] if 'Vertical' in final_df.columns else ''
+    output_df['Temple Length'] = final_df['Temple Length'] if 'Temple Length' in final_df.columns else ''
+    output_df['Country/Region of Manufacture'] = final_df['Country/Region of Manufacture'] if 'Country/Region of Manufacture' in final_df.columns else ''
+    output_df['UPC'] = df['Variant Barcode'] if 'Variant Barcode' in df.columns else ''
+    
+    return output_df
+
+    #return final_df
 
 # Function to convert DataFrame to Excel and return BytesIO object
 def to_excel(df):
