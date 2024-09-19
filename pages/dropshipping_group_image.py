@@ -73,7 +73,7 @@ def process_excel(file):
     # Map relevant columns (update based on actual input file structure)
     output_df['Listing ID'] = final_df['Listing ID']if 'Listing ID' in final_df.columns else ''
     output_df['Title'] = final_df['Title'] if 'Title' in df.columns else ''
-    output_df['Type'] = final_df['Product Category'] if 'Product Category' in v.columns else ''
+    output_df['Type'] = final_df['Product Category'] if 'Product Category' in final_df.columns else ''
     output_df['Seller'] = final_df['Brand'] if 'Brand' in final_df.columns else ''
     output_df['Price'] = final_df['Actual Price'] if 'Actual Price' in final_df.columns else ''
     output_df['Quantity'] = final_df['Quantity Available'] if 'Quantity Available' in final_df.columns else ''
