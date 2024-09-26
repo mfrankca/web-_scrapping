@@ -76,12 +76,14 @@ def process_excel(file):
         output_df['Quantity'] = final_df['Quantity Available'] if 'Quantity Available' in final_df.columns else ''
         output_df['Frame Material'] = final_df['Material'] if 'Material' in final_df.columns else ''
         output_df['Bridge Width'] = final_df['Bridge Size'] if 'Bridge Size' in final_df.columns else ''
+        output_df['Lens Width'] = final_df['Option2 Value'] if 'Option2 Value' in final_df.columns else ''
         output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
         output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
         output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
         output_df['Image URL 1'] = final_df['Image URL 1']
         output_df['Image URL 2'] = final_df['Image URL 2']
         output_df['Image URL 3'] = final_df['Image URL 3']
+        output_df['UPC'] =final_df['Listing ID'] if 'Listing ID' in final_df.columns else ''
 
         return output_df
 
