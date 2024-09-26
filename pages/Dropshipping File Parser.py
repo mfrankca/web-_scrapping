@@ -80,8 +80,11 @@ def process_excel(file):
         output_df['Bridge Width'] = final_df['Bridge Size'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Bridge Size' in final_df.columns else ''
         output_df['Lens Width'] = final_df['Option2 Value'] if 'Option2 Value' in final_df.columns else ''
         output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
-        output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
-        output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
+        #output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
+        output_df['Lens Color'] = final_df['Lens Colour'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Lens Colour' in final_df.columns else ''
+       # output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
+        output_df['Temple Length'] = final_df['Temple Size'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Temple Size' in final_df.columns else ''
+
         output_df['Image URL 1'] = final_df['Image URL 1']
         output_df['Image URL 2'] = final_df['Image URL 2']
         output_df['Image URL 3'] = final_df['Image URL 3']
