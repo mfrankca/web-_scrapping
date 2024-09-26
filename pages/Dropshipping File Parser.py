@@ -60,8 +60,8 @@ def process_excel(file):
         expected_columns = [
             'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity',
             'Image URL 1', 'Image URL 2', 'Image URL 3',
-            'Brand', 'Frame Material', 'Bridge Width', 'Lens Color', 'Temple Length'
-        ]
+            'Brand', 'Model','MPN','Frame Color','Frame Material', 'Style', 'Features','Lens Color', 'Lens Technology',
+            'Lens Material','Department','Lens Width','Bridge Width','Vertical Height','Country/Region of Manufacture','UPC']
 
         # Create a new dataframe with the expected format
         output_df = pd.DataFrame(columns=expected_columns)
@@ -70,11 +70,13 @@ def process_excel(file):
         output_df['Listing ID'] = final_df['Listing ID'] if 'Listing ID' in final_df.columns else ''
         output_df['Title'] = final_df['Title'] if 'Title' in final_df.columns else ''
         output_df['Type'] = final_df['Product Category'] if 'Product Category' in final_df.columns else ''
-        output_df['Seller'] = final_df['Brand'] if 'Brand' in final_df.columns else ''
+        output_df['Seller'] ='TeamETO'
+        output_df['Brand']=final_df['Brand'] if 'Brand' in final_df.columns else ''
         output_df['Price'] = final_df['Actual Price'] if 'Actual Price' in final_df.columns else ''
         output_df['Quantity'] = final_df['Quantity Available'] if 'Quantity Available' in final_df.columns else ''
         output_df['Frame Material'] = final_df['Material'] if 'Material' in final_df.columns else ''
         output_df['Bridge Width'] = final_df['Bridge Size'] if 'Bridge Size' in final_df.columns else ''
+        output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
         output_df['Lens Color'] = final_df['Lens Color'] if 'Lens Color' in final_df.columns else ''
         output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
         output_df['Image URL 1'] = final_df['Image URL 1']
