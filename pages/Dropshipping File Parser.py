@@ -77,7 +77,7 @@ def process_excel(file):
         output_df['Frame Material'] = final_df['Material'] if 'Material' in final_df.columns else ''
         output_df['Bridge Width'] = final_df['Bridge Size'] if 'Bridge Size' in final_df.columns else ''
         output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
-        output_df['Lens Color'] = final_df['Lens Color'] if 'Lens Color' in final_df.columns else ''
+        output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
         output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
         output_df['Image URL 1'] = final_df['Image URL 1']
         output_df['Image URL 2'] = final_df['Image URL 2']
