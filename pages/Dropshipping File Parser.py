@@ -27,7 +27,8 @@ def process_excel(file):
             'Variant Barcode' : 'first',
             'Quantity Available': 'first',
             'Image Src': lambda x: list(x),
-            'Description (HTML)': 'first'
+            'Description (HTML)': 'first',
+            'Option2 Value': 'first',
         }).reset_index()
         
         # Step 3: Separate the images into separate columns
