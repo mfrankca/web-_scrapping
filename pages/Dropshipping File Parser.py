@@ -29,6 +29,7 @@ def process_excel(file):
             'Image Src': lambda x: list(x),
             'Description (HTML)': 'first',
             'Option2 Value': 'first',
+            'Option1 Value':'first',
         }).reset_index()
         
         # Step 3: Separate the images into separate columns
