@@ -62,7 +62,8 @@ def process_excel(file):
             'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity',
             'Image URL 1', 'Image URL 2', 'Image URL 3',
             'Brand', 'Model','MPN','Frame Color','Frame Material', 'Style', 'Features','Lens Color', 'Lens Technology',
-            'Lens Material','Department','Lens Width','Bridge Width','Vertical Height','Country/Region of Manufacture','UPC']
+            'Lens Material','Department','Lens Width','Bridge Width','Vertical Height','Temple Length',
+            'Country/Region of Manufacture','UPC']
 
         # Create a new dataframe with the expected format
         output_df = pd.DataFrame(columns=expected_columns)
@@ -75,12 +76,12 @@ def process_excel(file):
         output_df['Brand']=final_df['Brand'] if 'Brand' in final_df.columns else ''
         output_df['Price'] = final_df['Actual Price'] if 'Actual Price' in final_df.columns else ''
         output_df['Quantity'] = final_df['Quantity Available'] if 'Quantity Available' in final_df.columns else ''
+        output_df['Frame Color'] = final_df['Option1 Value'] if 'Option1 Value' in final_df.columns else ''
         output_df['Frame Material'] = final_df['Material'] if 'Material' in final_df.columns else ''
         #output_df['Bridge Width'] = final_df['Bridge Size'] if 'Bridge Size' in final_df.columns else ''
         output_df['Bridge Width'] = final_df['Bridge Size'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Bridge Size' in final_df.columns else ''
        # output_df['Lens Width'] = final_df['Option2 Value'] if 'Option2 Value' in final_df.columns else ''
-        output_df['Lens Width'] = final_df['Option2 Value'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Option2 Value' in final_df.columns else ''
-
+        output_df['Lens Width'] = final_df['Option2 Value'].apply(lambda x: f"{int(x)} mm" if pd.notna(x) and isinstance(x, (int, float)) else '') if 'Option2 Value' in final_df.columns else ''
         output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
         output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
        # output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
