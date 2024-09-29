@@ -83,7 +83,7 @@ def process_excel(file):
         output_df['Bridge Width'] = final_df['Bridge Size'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Bridge Size' in final_df.columns else ''
         output_df['Department'] = final_df['Gender'] if 'Gender' in final_df.columns else ''
         output_df['Lens Width'] = final_df['Option2 Value'].apply(lambda x: f"{int(x)} mm" if pd.notna(x) and isinstance(x, (int, float)) else '') if 'Option2 Value' in final_df.columns else ''
-        output_df['Features'] = final_df['Tags'] if 'Tags' in final_df.columns else ''
+        output_df['Features'] = final_df['Rim Type'] if 'Rim Type' in final_df.columns else ''
         output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
         output_df['Style'] = final_df['Rim Type'] if 'Rim Type' in final_df.columns else ''
        # output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
