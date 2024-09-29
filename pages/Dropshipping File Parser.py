@@ -85,7 +85,7 @@ def process_excel(file):
         output_df['Lens Width'] = final_df['Option2 Value'].apply(lambda x: f"{int(x)} mm" if pd.notna(x) and isinstance(x, (int, float)) else '') if 'Option2 Value' in final_df.columns else ''
         output_df['Features'] = final_df['Rim Type'] if 'Rim Type' in final_df.columns else ''
         output_df['Lens Color'] = final_df['Lens Colour'] if 'Lens Colour' in final_df.columns else ''
-        output_df['Style'] = final_df['Rim Type'] if 'Rim Type' in final_df.columns else ''
+        output_df['Style'] = final_df['Shape'] if 'Shape' in final_df.columns else ''
        # output_df['Temple Length'] = final_df['Temple Size'] if 'Temple Size' in final_df.columns else ''
         output_df['Temple Length'] = final_df['Temple Size'].apply(lambda x: f"{x} mm" if pd.notna(x) else '') if 'Temple Size' in final_df.columns else ''
 
