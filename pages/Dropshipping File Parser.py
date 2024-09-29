@@ -55,7 +55,8 @@ def process_excel(file):
         final_df = pd.concat([grouped_df.drop(columns=['Description (HTML)', 'Parsed Description']), parsed_df], axis=1)
 
         # Step 5: Map the columns to the expected format
-        final_df['Actual Price'] = final_df['Price'] * 2
+        final_df['Actual Price'] = (final_df['Price'] * 2).round()
+
         final_df['Listing ID'] = final_df['Variant Barcode']
 
         # Define the columns in the expected format
