@@ -62,7 +62,7 @@ def main():
     display_sidebar()
     
     st.title("Welcome to SunRayCity Management")
-    
+    st.header('Customer Managemenet')
     # Call the upload file UI function
     df = upload_file_ui()
     
