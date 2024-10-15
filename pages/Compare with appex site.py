@@ -11,7 +11,7 @@ def combine_csv_files(uploaded_files):
     
     # Remove rows where 'SKU' is null or empty
     combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null SKUs
-    combined_df = combined_df[combined_df['SKU'].str.strip() != '']  # Remove empty SKU rows
+    combined_df = combined_df[combined_df['Listing ID'].str.strip() != '']  # Remove empty SKU rows
     return combined_df
 
 # Function to compare 'SKU' field of two dataframes
