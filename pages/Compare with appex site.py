@@ -10,14 +10,14 @@ def combine_csv_files(uploaded_files):
             combined_df = pd.concat([combined_df, df], ignore_index=True)
     
     # Remove rows where 'Listing ID' is null or empty
-    combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null Listing IDs
-    combined_df = combined_df[combined_df['Listing ID'].str.strip() != '']  # Remove empty Listing ID rows
+    #combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null Listing IDs
+    #combined_df = combined_df[combined_df['Listing ID'].str.strip() != '']  # Remove empty Listing ID rows
     return combined_df
 
 # Function to compare 'Listing ID' in combined_df with 'SKU' in comparison_df
 def compare_listing_ids_to_skus(combined_df, comparison_df):
     # Ensure Listing ID and SKU are strings to avoid mismatches
-    combined_df['Listing ID'] = combined_df['Listing ID'].astype(str)
+    combined_df['SKU'] = combined_df['Listing ID'].astype(str)
     comparison_df['SKU'] = comparison_df['SKU'].astype(str)
 
     # Remove rows where 'SKU' is null or empty in comparison dataframe
@@ -25,10 +25,10 @@ def compare_listing_ids_to_skus(combined_df, comparison_df):
     comparison_df = comparison_df[comparison_df['SKU'].str.strip() != '']  # Remove empty SKU rows
 
     # Find SKUs in comparison_df not in combined_df (based on Listing ID)
-    missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['Listing ID'])]
+    missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['SKU'])]
 
     # Find Listing IDs in combined_df not in comparison_df (based on SKU)
-    missing_in_comparison = combined_df[~combined_df['Listing ID'].isin(comparison_df['SKU'])]
+    missing_in_comparison = combined_df[~combined_df['SKU'].isin(comparison_df['SKU'])]
 
     return missing_in_combined, missing_in_comparison
 
