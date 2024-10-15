@@ -8,6 +8,10 @@ def combine_csv_files(uploaded_files):
         if file.name.endswith('.csv'):
             df = pd.read_csv(file)
             combined_df = pd.concat([combined_df, df], ignore_index=True)
+    
+    # Remove rows where 'SKU' is null or empty
+    combined_df = combined_df.dropna(subset=['SKU'])  # Drop null SKUs
+    combined_df = combined_df[combined_df['SKU'].str.strip() != '']  # Remove empty SKU rows
     return combined_df
 
 # Function to compare 'SKU' field of two dataframes
@@ -15,6 +19,10 @@ def compare_skus(combined_df, comparison_df):
     # Ensure SKU is a string to avoid mismatches
     combined_df['SKU'] = combined_df['Listing ID'].astype(str)
     comparison_df['SKU'] = comparison_df['SKU'].astype(str)
+
+    # Remove rows where 'SKU' is null or empty in comparison dataframe
+    comparison_df = comparison_df.dropna(subset=['SKU'])  # Drop null SKUs in comparison file
+    comparison_df = comparison_df[comparison_df['SKU'].str.strip() != '']  # Remove empty SKU rows
 
     # Find SKUs in comparison_df not in combined_df
     missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['SKU'])]
@@ -39,7 +47,7 @@ def main():
         combined_df = combine_csv_files(uploaded_files)
 
         # Display combined dataframe
-        st.write("Combined CSV Data:")
+        st.write("Combined CSV Data (valid SKUs only):")
         st.write(combined_df)
 
         # Read the comparison file
