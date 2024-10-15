@@ -10,7 +10,7 @@ def combine_csv_files(uploaded_files):
             combined_df = pd.concat([combined_df, df], ignore_index=True)
     
     # Remove rows where 'SKU' is null or empty
-    combined_df = combined_df.dropna(subset=['SKU'])  # Drop null SKUs
+    combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null SKUs
     combined_df = combined_df[combined_df['SKU'].str.strip() != '']  # Remove empty SKU rows
     return combined_df
 
