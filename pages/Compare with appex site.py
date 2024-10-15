@@ -9,32 +9,32 @@ def combine_csv_files(uploaded_files):
             df = pd.read_csv(file)
             combined_df = pd.concat([combined_df, df], ignore_index=True)
     
-    # Remove rows where 'SKU' is null or empty
-    combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null SKUs
-    combined_df = combined_df[combined_df['Listing ID'].str.strip() != '']  # Remove empty SKU rows
+    # Remove rows where 'Listing ID' is null or empty
+    combined_df = combined_df.dropna(subset=['Listing ID'])  # Drop null Listing IDs
+    combined_df = combined_df[combined_df['Listing ID'].str.strip() != '']  # Remove empty Listing ID rows
     return combined_df
 
-# Function to compare 'SKU' field of two dataframes
-def compare_skus(combined_df, comparison_df):
-    # Ensure SKU is a string to avoid mismatches
-    combined_df['SKU'] = combined_df['Listing ID'].astype(str)
+# Function to compare 'Listing ID' in combined_df with 'SKU' in comparison_df
+def compare_listing_ids_to_skus(combined_df, comparison_df):
+    # Ensure Listing ID and SKU are strings to avoid mismatches
+    combined_df['Listing ID'] = combined_df['Listing ID'].astype(str)
     comparison_df['SKU'] = comparison_df['SKU'].astype(str)
 
     # Remove rows where 'SKU' is null or empty in comparison dataframe
     comparison_df = comparison_df.dropna(subset=['SKU'])  # Drop null SKUs in comparison file
     comparison_df = comparison_df[comparison_df['SKU'].str.strip() != '']  # Remove empty SKU rows
 
-    # Find SKUs in comparison_df not in combined_df
-    missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['SKU'])]
+    # Find SKUs in comparison_df not in combined_df (based on Listing ID)
+    missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['Listing ID'])]
 
-    # Find SKUs in combined_df not in comparison_df
-    missing_in_comparison = combined_df[~combined_df['SKU'].isin(comparison_df['SKU'])]
+    # Find Listing IDs in combined_df not in comparison_df (based on SKU)
+    missing_in_comparison = combined_df[~combined_df['Listing ID'].isin(comparison_df['SKU'])]
 
     return missing_in_combined, missing_in_comparison
 
 # Main Streamlit app function
 def main():
-    st.title("CSV File Combiner and SKU Comparator")
+    st.title("CSV File Combiner and Listing ID to SKU Comparator")
     
     # Upload multiple CSV files to combine
     uploaded_files = st.file_uploader("Upload CSV files to combine", accept_multiple_files=True, type=['csv'])
@@ -47,14 +47,14 @@ def main():
         combined_df = combine_csv_files(uploaded_files)
 
         # Display combined dataframe
-        st.write("Combined CSV Data (valid SKUs only):")
+        st.write("Combined CSV Data (valid Listing IDs only):")
         st.write(combined_df)
 
         # Read the comparison file
         comparison_df = pd.read_csv(comparison_file)
 
-        # Compare the 'SKU' fields
-        missing_in_combined, missing_in_comparison = compare_skus(combined_df, comparison_df)
+        # Compare 'Listing ID' from combined files with 'SKU' from comparison file
+        missing_in_combined, missing_in_comparison = compare_listing_ids_to_skus(combined_df, comparison_df)
 
         # Display missing records in combined file (exists in comparison but not in combined)
         st.write("Missing in Combined File (exists in Comparison):")
