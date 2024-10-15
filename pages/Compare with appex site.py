@@ -10,19 +10,23 @@ def combine_csv_files(uploaded_files):
             combined_df = pd.concat([combined_df, df], ignore_index=True)
     return combined_df
 
-# Function to compare 'description' field of two dataframes
-def compare_descriptions(combined_df, comparison_df):
-    # Take only the first 20 characters of the 'description' field for comparison
-    combined_df['short_description'] = combined_df['Listing ID']
-    comparison_df['short_description'] = comparison_df['SKU']
+# Function to compare 'SKU' field of two dataframes
+def compare_skus(combined_df, comparison_df):
+    # Ensure SKU is a string to avoid mismatches
+    combined_df['SKU'] = combined_df['Listing ID'].astype(str)
+    comparison_df['SKU'] = comparison_df['SKU'].astype(str)
 
-    # Find records in comparison_df that are not in combined_df based on short_description
-    missing_records = comparison_df[~comparison_df['short_description'].isin(combined_df['short_description'])]
-    return missing_records
+    # Find SKUs in comparison_df not in combined_df
+    missing_in_combined = comparison_df[~comparison_df['SKU'].isin(combined_df['SKU'])]
+
+    # Find SKUs in combined_df not in comparison_df
+    missing_in_comparison = combined_df[~combined_df['SKU'].isin(comparison_df['SKU'])]
+
+    return missing_in_combined, missing_in_comparison
 
 # Main Streamlit app function
 def main():
-    st.title("CSV File Combiner and Comparator")
+    st.title("CSV File Combiner and SKU Comparator")
     
     # Upload multiple CSV files to combine
     uploaded_files = st.file_uploader("Upload CSV files to combine", accept_multiple_files=True, type=['csv'])
@@ -41,20 +45,34 @@ def main():
         # Read the comparison file
         comparison_df = pd.read_csv(comparison_file)
 
-        # Compare the 'description' fields
-        missing_records = compare_descriptions(combined_df, comparison_df)
+        # Compare the 'SKU' fields
+        missing_in_combined, missing_in_comparison = compare_skus(combined_df, comparison_df)
 
-        # Display missing records
-        st.write("Missing Records in Combined File:")
-        st.write(missing_records)
+        # Display missing records in combined file (exists in comparison but not in combined)
+        st.write("Missing in Combined File (exists in Comparison):")
+        st.write(missing_in_combined)
 
-        # Provide option to download the missing records as a CSV
-        if not missing_records.empty:
-            csv = missing_records.to_csv(index=False).encode('utf-8')
+        # Display missing records in comparison file (exists in Combined but not in Comparison)
+        st.write("Missing in Comparison File (exists in Combined):")
+        st.write(missing_in_comparison)
+
+        # Provide option to download the missing records (comparison file missing in combined)
+        if not missing_in_combined.empty:
+            csv_missing_combined = missing_in_combined.to_csv(index=False).encode('utf-8')
             st.download_button(
-                label="Download Missing Records",
-                data=csv,
-                file_name='missing_records.csv',
+                label="Download Missing in Combined",
+                data=csv_missing_combined,
+                file_name='missing_in_combined.csv',
+                mime='text/csv'
+            )
+
+        # Provide option to download the missing records (combined file missing in comparison)
+        if not missing_in_comparison.empty:
+            csv_missing_comparison = missing_in_comparison.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Download Missing in Comparison",
+                data=csv_missing_comparison,
+                file_name='missing_in_comparison.csv',
                 mime='text/csv'
             )
 
