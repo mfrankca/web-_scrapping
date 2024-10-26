@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import streamlit as st
+import pandas as pd
 
 def scrape_dynamic_ebay_product(listing_id, ebay_site='www.ebay.com'):
     url = f'https://www.ebay.com/itm/{listing_id}'
@@ -21,7 +23,7 @@ def scrape_dynamic_ebay_product(listing_id, ebay_site='www.ebay.com'):
         if text and len(text) > 1:
             key = ' '.join(div.get('class', []))  # use class name(s) as key if available
             product_details[key] = text
-    
+    st.write(product_details)
     # Example 2: Use span elements which are often used for labels and values
     for span in soup.find_all('span'):
         text = span.get_text(strip=True)
