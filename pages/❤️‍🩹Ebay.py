@@ -3,10 +3,7 @@ from bs4 import BeautifulSoup
 
 def scrape_dynamic_ebay_product(listing_id, ebay_site='www.ebay.com'):
     url = f'https://www.ebay.com/itm/{listing_id}'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    }
-    
+ 
     response = requests.get(url)
     if response.status_code != 200:
         print(f"Failed to retrieve the page: Status code {response.status_code}")
