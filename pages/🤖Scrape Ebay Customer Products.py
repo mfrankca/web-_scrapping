@@ -151,7 +151,10 @@ def scrape_ebay(item):
     row['Image URL 1'] = img_urls[0] if len(img_urls) > 0 else ''
     row['Image URL 2'] = img_urls[1] if len(img_urls) > 1 else ''
     row['Image URL 3'] = img_urls[2] if len(img_urls) > 2 else ''
-             
+    row['Image URL 4'] = img_urls[2] if len(img_urls) > 2 else ''
+    row['Image URL 5'] = img_urls[2] if len(img_urls) > 2 else ''
+    row['Image URL 6'] = img_urls[2] if len(img_urls) > 2 else '' 
+    row['Image URL 7'] = img_urls[2] if len(img_urls) > 2 else ''         
     # Extract information from the first table
     try:
           table = soup.find('div', attrs={'id': 'viTabs_0_is'})
@@ -217,13 +220,14 @@ def generate_output_files(data, output_format):
     df = pd.DataFrame(data)
     
     # Define the desired columns order
-    columns_order = [
-        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
-        'Lens Material', 'Department',  
-        'Lens Socket Width', 'Eye', 'Bridge Width', 'Bridge', 'Vertical', 'Temple Length', 
-        'Country/Region of Manufacture', 'UPC'
-    ]
+    ###columns_order = [
+    ###    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+    ###    'Image URL 4', 'Image URL 5', 'Image URL 6', 'Image URL 7', 
+    ###    'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
+    ###    'Lens Material', 'Department',  
+    ###    'Lens Socket Width', 'Eye', 'Bridge Width', 'Bridge', 'Vertical', 'Temple Length', 
+    ###    'Country/Region of Manufacture', 'UPC'
+    ###]
 
     # Ensure all columns are present in the DataFrame, create missing columns with empty values
     for column in columns_order:
@@ -231,24 +235,24 @@ def generate_output_files(data, output_format):
             df[column] = ""
   
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty or None, and 'Eye' is not empty
-    df['Lens Socket Width'] = df.apply(
-    lambda row: row['Eye'] if (pd.isna(row['Lens Socket Width']) or row['Lens Socket Width'].strip() == '')  else row['Lens Socket Width'], axis=1
-)
+    ###df['Lens Socket Width'] = df.apply(
+    ####lambda row: row['Eye'] if (pd.isna(row['Lens Socket Width']) or row['Lens Socket Width'].strip() == '')  else row['Lens Socket Width'], axis=1
+###)
 
     # Update 'Bridge Width' with 'Bridge' if 'Bridge Width' is empty or None, and 'Bridge' is not empty
-    df['Bridge Width'] = df.apply(
-    lambda row: row['Bridge'] if (pd.isna(row['Bridge Width']) or row['Bridge Width'].strip() == '')  else row['Bridge Width'], axis=1
-)
-    columns_order = [
-        'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
-        'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
-        'Lens Material', 'Department',  
-        'Lens Socket Width', 'Bridge Width',  'Vertical', 'Temple Length', 
-        'Country/Region of Manufacture', 'UPC'
-    ]
+    ####df['Bridge Width'] = df.apply(
+    ####lambda row: row['Bridge'] if (pd.isna(row['Bridge Width']) or row['Bridge Width'].strip() == '')  else row['Bridge Width'], axis=1
+####)
+    ###columns_order = [
+    ####    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
+    # ###   'Brand', 'Model', 'MPN', 'Frame Color', 'Frame Material', 'Style', 'Features', 'Lens Color', 'Lens Technology',
+    ###    'Lens Material', 'Department',  
+    ####    'Lens Socket Width', 'Bridge Width',  'Vertical', 'Temple Length', 
+    ####    'Country/Region of Manufacture', 'UPC'
+    ####]
 
     # Reorder the columns as per the desired order
-    filtered_df = df[columns_order]
+    ####filtered_df = df[columns_order]
 
     # Generate the output files in the selected format(s)
     if 'Excel' in output_format:
