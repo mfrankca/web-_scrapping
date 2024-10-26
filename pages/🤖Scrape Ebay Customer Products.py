@@ -230,9 +230,9 @@ def generate_output_files(data, output_format):
     ###]
 
     # Ensure all columns are present in the DataFrame, create missing columns with empty values
-    for column in columns_order:
-        if column not in df.columns:
-            df[column] = ""
+    ###for column in columns_order:
+    ###   if column not in df.columns:
+    ###        df[column] = ""
   
     # Update 'Lens Socket Width' with 'Eye' if 'Lens Socket Width' is empty or None, and 'Eye' is not empty
     ###df['Lens Socket Width'] = df.apply(
