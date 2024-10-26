@@ -23,7 +23,7 @@ def scrape_dynamic_ebay_product(listing_id, ebay_site='www.ebay.com'):
         if text and len(text) > 1:
             key = ' '.join(div.get('class', []))  # use class name(s) as key if available
             product_details[key] = text
-    st.write(product_details)
+    
     # Example 2: Use span elements which are often used for labels and values
     for span in soup.find_all('span'):
         text = span.get_text(strip=True)
@@ -46,4 +46,4 @@ def scrape_dynamic_ebay_product(listing_id, ebay_site='www.ebay.com'):
 # Usage
 listing_id = '255216996716'  # Replace with actual eBay listing ID
 details = scrape_dynamic_ebay_product(listing_id)
-print(details)
+st.write(details)
