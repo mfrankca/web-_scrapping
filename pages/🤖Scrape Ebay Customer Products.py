@@ -218,7 +218,7 @@ def perform_web_scraping(input_filepath):
 def generate_output_files(data, output_format):
     output_files = []
     df = pd.DataFrame(data)
-    
+    st.write(df.head(10))
     # Define the desired columns order
     ###columns_order = [
     ###    'Listing ID', 'Title', 'Type', 'Seller', 'Price', 'Quantity', 'Image URL 1', 'Image URL 2', 'Image URL 3', 
