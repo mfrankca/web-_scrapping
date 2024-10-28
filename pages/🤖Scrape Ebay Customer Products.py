@@ -120,7 +120,7 @@ def scrape_ebay(item):
             qty = '1'
     row['Quantity'] = qty
     
-        
+    '''    
     try:
          qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
          if qty_element:
@@ -135,7 +135,7 @@ def scrape_ebay(item):
              row['Quantity'] = '1'
     except:
         row['Quantity'] = 'Not Available'
-        
+    '''    
     # Get images
     try:
           img_container = soup.find('div', {'class': 'ux-image-carousel-container'})
@@ -156,13 +156,7 @@ def scrape_ebay(item):
     row['Image URL 6'] = img_urls[2] if len(img_urls) > 2 else '' 
     row['Image URL 7'] = img_urls[2] if len(img_urls) > 2 else ''  
     
-        # Initialize a dictionary to hold the price data
-    volume_pricing_data = {
-        'Buy 1': None,
-        'Buy 2': None,
-        'Buy 3': None,
-        'Buy 4 or more': None
-    }
+  
      # Extract each button in the volume pricing section
     volume_buttons = soup.select('div.x-volume-pricing__pill button.x-volume-pricing__btn')
     
@@ -179,13 +173,13 @@ def scrape_ebay(item):
         
         # Use the quantity_map to assign values to the correct dictionary key
         if quantity_text in quantity_map:
-            volume_pricing_data[quantity_map[quantity_text]] = price_text
+            row[quantity_map[quantity_text]] = price_text
     
     # Extract the "4 or more" option if available
     more_pricing = soup.select_one('div.x-volume-pricing__more-text')
     if more_pricing:
         price_text = more_pricing.find('span', class_='ux-textspans--BOLD').get_text(strip=True)
-        volume_pricing_data['Buy 4 or more'] = price_text
+        row['Buy 4 or more'] = price_text
        
     # Extract information from the first table
     try:
