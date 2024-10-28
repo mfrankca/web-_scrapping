@@ -221,18 +221,20 @@ def scrape_ebay(item):
     except Exception as e:
               print(f"An error occurred while extracting information from Table 2: {e}")
 
-    return row
+  
     # Example of data extraction
     ####title = soup.find('h1', {'class': 'it-ttl'}).text.strip() if soup.find('h1', {'class': 'it-ttl'}) else "N/A"
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
     
-     # Extract the item description from the seller
-    item_description = soup.find('span', class_='ux-textspans', text="Item description from the seller")
-    if item_description:
-        # Get the following sibling text if available
-        description_text = item_description.find_next_sibling(text=True)
-        if description_text:
-            row['Item Description'] = description_text.strip()
+# Extract the item description from the iframe
+    description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
+    if description_iframe:
+        description_url = description_iframe.get('src')
+        iframe_response = requests.get(description_url, headers=headers)
+        if iframe_response.status_code == 200:
+            iframe_soup = BeautifulSoup(iframe_response.content, 'html.parser')
+            item_description = iframe_soup.get_text(strip=True)
+            row['Item Description'] = item_description
     return row        
     
     '''
