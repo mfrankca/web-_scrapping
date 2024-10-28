@@ -214,6 +214,16 @@ def scrape_ebay(item):
     ####title = soup.find('h1', {'class': 'it-ttl'}).text.strip() if soup.find('h1', {'class': 'it-ttl'}) else "N/A"
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
     
+     # Extract the item description from the seller
+    item_description = soup.find('span', class_='ux-textspans', text="Item description from the seller")
+    if item_description:
+        # Get the following sibling text if available
+        description_text = item_description.find_next_sibling(text=True)
+        if description_text:
+            row['Item Description'] = description_text.strip()
+    return row        
+    
+    '''
     return {
         'listing_id': item,
         'title': title,
@@ -221,7 +231,7 @@ def scrape_ebay(item):
         'Seller':seller_name,
         'Quantity' :qty
     }
-
+'''
 def perform_web_scraping(input_filepath):
     # Determine the file type and read the data accordingly
     _, file_extension = os.path.splitext(input_filepath)
