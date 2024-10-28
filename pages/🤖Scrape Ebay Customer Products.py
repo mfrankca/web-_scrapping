@@ -112,7 +112,7 @@ def scrape_ebay(item):
     row['Price'] = price
 
     try:
-        qty = soup.find('div', attrs={'class': 'd-quantity__availability'}).find('span').text.replace(
+        qty = soup.find('div', attrs={'class': 'ux-textspans ux-textspans--SECONDARY'}).find('span').text.replace(
             'available', '').replace('More than', '').strip()
         if 'Last One' in qty:
            qty = '1'
@@ -154,7 +154,43 @@ def scrape_ebay(item):
     row['Image URL 4'] = img_urls[2] if len(img_urls) > 2 else ''
     row['Image URL 5'] = img_urls[2] if len(img_urls) > 2 else ''
     row['Image URL 6'] = img_urls[2] if len(img_urls) > 2 else '' 
-    row['Image URL 7'] = img_urls[2] if len(img_urls) > 2 else ''         
+    row['Image URL 7'] = img_urls[2] if len(img_urls) > 2 else ''  
+    
+        # Initialize a dictionary to hold the price data
+    volume_pricing_data = {
+        'Buy 1': None,
+        'Buy 2': None,
+        'Buy 3': None,
+        'Buy 4 or more': None
+    }
+     # Extract each button in the volume pricing section
+    volume_buttons = soup.select('div.x-volume-pricing__pill button.x-volume-pricing__btn')
+    
+    # Map quantity labels to dictionary keys
+    quantity_map = {
+        "Buy 1": 'Buy 1',
+        "Buy 2": 'Buy 2',
+        "Buy 3": 'Buy 3'
+    }
+    
+    for button in volume_buttons:
+        quantity_text = button.find('span', class_='ux-textspans--SECONDARY').get_text(strip=True)
+        price_text = button.find('span', class_='ux-textspans--BOLD').get_text(strip=True)
+        
+        # Use the quantity_map to assign values to the correct dictionary key
+        if quantity_text in quantity_map:
+            volume_pricing_data[quantity_map[quantity_text]] = price_text
+    
+    # Extract the "4 or more" option if available
+    more_pricing = soup.select_one('div.x-volume-pricing__more-text')
+    if more_pricing:
+        price_text = more_pricing.find('span', class_='ux-textspans--BOLD').get_text(strip=True)
+        volume_pricing_data['Buy 4 or more'] = price_text
+    
+    # Convert the dictionary to a DataFrame with a single row
+    df = pd.DataFrame([volume_pricing_data])
+    
+    return df       
     # Extract information from the first table
     try:
           table = soup.find('div', attrs={'id': 'viTabs_0_is'})
