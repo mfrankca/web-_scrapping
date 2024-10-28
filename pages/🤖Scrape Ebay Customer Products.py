@@ -186,11 +186,7 @@ def scrape_ebay(item):
     if more_pricing:
         price_text = more_pricing.find('span', class_='ux-textspans--BOLD').get_text(strip=True)
         volume_pricing_data['Buy 4 or more'] = price_text
-    
-    # Convert the dictionary to a DataFrame with a single row
-    df = pd.DataFrame([volume_pricing_data])
-    
-    return df       
+       
     # Extract information from the first table
     try:
           table = soup.find('div', attrs={'id': 'viTabs_0_is'})
