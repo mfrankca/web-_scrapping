@@ -304,17 +304,17 @@ def generate_output_files(data, output_format):
     # Generate the output files in the selected format(s)
     if 'Excel' in output_format:
         excel_file = 'output.xlsx'
-        filtered_df.to_excel(excel_file, index=False)
+        df.to_excel(excel_file, index=False)
         output_files.append(excel_file)
         
     if 'JSON' in output_format:
         json_file = 'output.json'
-        filtered_df.to_json(json_file, orient='records')
+        df.to_json(json_file, orient='records')
         output_files.append(json_file)
         
     if 'CSV' in output_format:
         csv_file = 'output.csv'
-        filtered_df.to_csv(csv_file, index=False)
+        df.to_csv(csv_file, index=False)
         output_files.append(csv_file)
 
     return output_files
