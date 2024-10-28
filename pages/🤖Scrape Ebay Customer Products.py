@@ -227,14 +227,11 @@ def scrape_ebay(item):
     ###price = soup.find('span', {'class': 'notranslate'}).text.strip() if soup.find('span', {'class': 'notranslate'}) else "N/A"
     
 # Extract the item description from the iframe
+     # Extract the iframe source for the item description
     description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
-    if description_iframe:
-        description_url = description_iframe.get('src')
-        iframe_response = requests.get(description_url)
-        if iframe_response.status_code == 200:
-            iframe_soup = BeautifulSoup(iframe_response.content, 'html.parser')
-            item_description = iframe_soup.get_text(strip=True)
-            row['Item Description'] = item_description
+    description_link = description_iframe['src'] if description_iframe else None
+    
+    row['Item Description'] = description_link 
     return row        
     
     '''
