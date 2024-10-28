@@ -143,7 +143,7 @@ def scrape_ebay(item):
         availability_texts = quantity_div.find_all('span', class_='ux-textspans--SECONDARY')
         for text in availability_texts:
             if "available" in text.get_text(strip=True):
-                roq['Quantity Available'] = text.get_text(strip=True).split()[0]
+                row['Quantity Available'] = text.get_text(strip=True).split()[0]
             elif "sold" in text.get_text(strip=True):
                 row['Quantity Sold'] = text.get_text(strip=True).split()[0]
                 
