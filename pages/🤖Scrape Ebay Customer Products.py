@@ -135,7 +135,19 @@ def scrape_ebay(item):
              row['Quantity'] = '1'
     except:
         row['Quantity'] = 'Not Available'
-    '''    
+    '''   
+    
+      # Extract quantity available and sold
+    quantity_div = soup.find('div', {'id': 'qtyAvailability'})
+    if quantity_div:
+        availability_texts = quantity_div.find_all('span', class_='ux-textspans--SECONDARY')
+        for text in availability_texts:
+            if "available" in text.get_text(strip=True):
+                roq['Quantity Available'] = text.get_text(strip=True).split()[0]
+            elif "sold" in text.get_text(strip=True):
+                row['Quantity Sold'] = text.get_text(strip=True).split()[0]
+                
+                 
     # Get images
     try:
           img_container = soup.find('div', {'class': 'ux-image-carousel-container'})
