@@ -121,20 +121,20 @@ def scrape_ebay(item):
     row['Quantity'] = qty
     
     '''    
-    try:
-         qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
-         if qty_element:
-             qty_text = qty_element.find('span').text.strip()
-             if 'Last One' in qty_text:
-                row['Quantity'] = '1'
-             elif 'Out of Stock' in qty_text:
-                row['Quantity'] = '0'    
-             else:
-                row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
-         else:
-             row['Quantity'] = '1'
-    except:
-        row['Quantity'] = 'Not Available'
+   # try:
+   #      qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
+   #      if qty_element:
+   #          qty_text = qty_element.find('span').text.strip()
+   #          if 'Last One' in qty_text:
+   #             row['Quantity'] = '1'
+   #          elif 'Out of Stock' in qty_text:
+   #             row['Quantity'] = '0'    
+   #          else:
+   #             row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
+   #      else:
+   #          row['Quantity'] = '1'
+   # except:
+   #     row['Quantity'] = 'Not Available'
     '''   
     # Extract description from iframe if available
     description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
