@@ -205,6 +205,17 @@ def scrape_ebay(item):
                 print("Table 1 not found.")
     except:pass
     
+     # Fetch the description content
+    if description_url:
+        desc_response = requests.get(description_url, headers=headers)
+        if desc_response.status_code == 200:
+            desc_soup = BeautifulSoup(desc_response.content, 'html.parser')
+            # Extract all text content from the iframe
+            product_details["Description"] = desc_soup.get_text(strip=True)
+        else:
+            print(f"Failed to retrieve the description iframe: Status code {desc_response.status_code}")
+    
+    
     #Exception as e:
      #      print(f"An error occurred while extracting information from Table 1: {e}")
 
