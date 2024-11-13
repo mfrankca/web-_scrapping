@@ -204,7 +204,9 @@ def scrape_ebay(item):
           else:
                 print("Table 1 not found.")
     except:pass
-    
+    # Extract the description iframe source URL
+    description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
+    description_url = description_iframe['src'] if description_iframe else None
      # Fetch the description content
     if description_url:
         desc_response = requests.get(description_url, headers=headers)
