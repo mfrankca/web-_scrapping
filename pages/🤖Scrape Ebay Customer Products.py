@@ -136,6 +136,10 @@ def scrape_ebay(item):
     except:
         row['Quantity'] = 'Not Available'
     '''   
+    # Extract description from iframe if available
+    description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
+    description_link = description_iframe['src'] if description_iframe else None
+    row['Description'] = description_link if description_link else 'Description not available'
     
       # Extract quantity available and sold
     quantity_div = soup.find('div', {'id': 'qtyAvailability'})
@@ -204,19 +208,6 @@ def scrape_ebay(item):
           else:
                 print("Table 1 not found.")
     except:pass
-    # Extract the description iframe source URL
-    description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
-    description_url = description_iframe['src'] if description_iframe else None
-     # Fetch the description content
-    if description_url:
-        desc_response = requests.get(description_url, headers=headers)
-        if desc_response.status_code == 200:
-            desc_soup = BeautifulSoup(desc_response.content, 'html.parser')
-            # Extract all text content from the iframe
-            product_details["Description"] = desc_soup.get_text(strip=True)
-        else:
-            print(f"Failed to retrieve the description iframe: Status code {desc_response.status_code}")
-    
     
     #Exception as e:
      #      print(f"An error occurred while extracting information from Table 1: {e}")
