@@ -120,7 +120,7 @@ def scrape_ebay(item):
             qty = '1'
     row['Quantity'] = qty
     
-    '''    
+   
    # try:
    #      qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
    #      if qty_element:
@@ -135,7 +135,7 @@ def scrape_ebay(item):
    #          row['Quantity'] = '1'
    # except:
    #     row['Quantity'] = 'Not Available'
-    '''   
+      
     # Extract description from iframe if available
     description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
     description_link = description_iframe['src'] if description_iframe else None
