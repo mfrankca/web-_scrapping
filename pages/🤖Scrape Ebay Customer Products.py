@@ -139,7 +139,7 @@ def scrape_ebay(item):
     # Extract description from iframe if available
     description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
     description_link = description_iframe['src'] if description_iframe else None
-    row['Description'] = description_link if description_link else 'Description not available'
+    row['Seller Description'] = description_link if description_link else 'Description not available'
     
       # Extract quantity available and sold
     quantity_div = soup.find('div', {'id': 'qtyAvailability'})
