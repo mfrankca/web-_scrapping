@@ -139,8 +139,23 @@ def scrape_ebay(item):
     # Extract description from iframe if available
     description_iframe = soup.find('iframe', {'id': 'desc_ifr'})
     description_link = description_iframe['src'] if description_iframe else None
-    row['Seller Description'] = description_link if description_link else 'Description not available'
+    #row['Seller Description'] = description_link if description_link else 'Description not available'
     
+    # Fetch and parse the item description from the iframe link
+    if description_link:
+        try:
+            description_response = requests.get(description_link)
+            description_soup = BeautifulSoup(description_response.content, 'html.parser')
+            
+            # Extract the text within the description (modify this selector as needed)
+            description_text = description_soup.get_text(separator="\n", strip=True)
+            row['Seller Description'] = description_text
+        except Exception as e:
+            print(f"Error fetching description: {e}")
+            row['Description'] = "Not Available"
+    else:
+        row['Seller Description'] = "Not Available"
+        
       # Extract quantity available and sold
     quantity_div = soup.find('div', {'id': 'qtyAvailability'})
     if quantity_div:
