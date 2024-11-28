@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+import boto3
+
 def display_sidebar():
     """
     Display the sidebar with a logo image and documentation.
