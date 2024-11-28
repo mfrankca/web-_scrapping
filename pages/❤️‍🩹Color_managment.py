@@ -4,9 +4,9 @@ from io import BytesIO
 import boto3
 
 # Fetch environment variables
-aws_access_key_id = st.secrets["aws_access_key_id"]
-aws_secret_access_key = st.secrets["aws_secret_access_key"]
-aws_default_region = st.secrets["aws_default_region"]
+aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
+aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
+aws_default_region = st.secrets["AWS_DEFAULT_REGION"]
 
 def display_sidebar():
     """
