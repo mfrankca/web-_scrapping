@@ -6,7 +6,7 @@ import boto3
 # Fetch environment variables
 aws_access_key_id = st.secrets["AWS_ACCESS_KEY_ID"]
 aws_secret_access_key = st.secrets["AWS_SECRET_ACCESS_KEY"]
-aws_default_region = "US East (Ohio) us-east-2" #st.secrets["AWS_DEFAULT_REGION"]
+aws_default_region = 'us-east-2' #st.secrets["AWS_DEFAULT_REGION"]
 
 def display_sidebar():
     """
