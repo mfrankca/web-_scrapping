@@ -103,14 +103,48 @@ def scrape_ebay(item):
     except AttributeError:
         seller_name ='Not Available'
     row['Seller'] = seller_name
+    '''
+    try:
+      #price = soup.find('div', attrs={'class': 'x-price-primary'}).find('span').text.split('$')[-1].strip()
+      price = soup.find('div', attrs={'class': 'x-price-primary'}).find('span').text.strip()
+    except AttributeError:
+            price = 'Not Available'
+    row['Price'] = price
 
+    try:
+        qty = soup.find('div', attrs={'class': 'd-quantity__availability'}).find('span').text.replace(
+            'available', '').replace('More than', '').strip()
+        if 'Last One' in qty:
+           qty = '1'
+    except AttributeError:
+            qty = '1'
+    row['Quantity'] = qty
+    
+        
+    try:
+         qty_element = soup.find('div', attrs={'class': 'd-quantity__availability'})
+         if qty_element:
+             qty_text = qty_element.find('span').text.strip()
+             st.write(qty_text)
+             if 'Last One' in qty_text:
+                row['Quantity'] = '1'
+             elif 'Out of Stock' in qty_text:
+                row['Quantity'] = '0'    
+             else:
+                row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
+                st.write( row['Quantity'] )
+         else:
+             row['Quantity'] = '1'
+    except:
+        row['Quantity'] = 'Not Available'
+    '''
     try:
     # Locate the quantity element by its class and ID
      qty_element = soup.find('div', attrs={'class': 'x-quantity__availability', 'id': 'qtyAvailability'})
      if qty_element:
         # Extract the text from the span inside the div
         qty_text = qty_element.find('span', class_='ux-textspans ux-textspans--SECONDARY').text.strip()
-        st.write(f"Full text: {qty_text}")  # Optional: Output the full text for debugging
+        st.write(qty_text)  # Optional: Output the full text for debugging
 
         # Determine the quantity based on the text content
         if 'Last One' in qty_text:
@@ -120,20 +154,16 @@ def scrape_ebay(item):
         elif 'More than' in qty_text:
             # Extract the number after "More than"
             row['Quantity'] = qty_text.split('More than')[-1].split()[0].strip()
-        elif 'available' in qty_text:
-            # Extract the number directly from "X available"
-            row['Quantity'] = qty_text.split('available')[0].strip()
         else:
-            # Default case: try extracting numeric value from unexpected formats
+            # Default case: try extracting a numeric value
             row['Quantity'] = ''.join(filter(str.isdigit, qty_text))  # Extract digits
 
-        st.write(f"Parsed quantity: {row['Quantity']}")  # Output the parsed quantity for debugging
+        st.write(row['Quantity'])  # Output the parsed quantity for debugging
      else:
         row['Quantity'] = '1'  # Default if no element is found
     except Exception as e:
-      row['Quantity'] = 'Not Available'
-      st.write(f"Error occurred: {e}")  # Log the error for debugging
-
+     row['Quantity'] = 'Not Available'
+     st.write(f"Error occurred: {e}")  # Log the error for debugging
 
     
     # Get images
