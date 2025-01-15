@@ -131,6 +131,7 @@ def scrape_ebay(item):
                 row['Quantity'] = '0'    
              else:
                 row['Quantity'] = qty_text.replace('available', '').replace('More than', '').strip()
+                write( row['Quantity'] )
          else:
              row['Quantity'] = '1'
     except:
