@@ -134,7 +134,7 @@ def scrape_ebay(item):
             # Default case: try extracting numeric value from unexpected formats
             row['Quantity'] = ''.join(filter(str.isdigit, qty_text))  # Extract digits
 
-        st.write(f"Parsed quantity: {row['Quantity']}")  # Output the parsed quantity for debugging
+        #st.write(f"Parsed quantity: {row['Quantity']}")  # Output the parsed quantity for debugging
      else:
         row['Quantity'] = '1'  # Default if no element is found
     except Exception as e:
