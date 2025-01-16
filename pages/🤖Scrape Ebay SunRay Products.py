@@ -105,6 +105,13 @@ def scrape_ebay(item):
     row['Seller'] = seller_name
 
     try:
+      #price = soup.find('div', attrs={'class': 'x-price-primary'}).find('span').text.split('$')[-1].strip()
+      price = soup.find('div', attrs={'class': 'x-price-primary'}).find('span').text.strip()
+    except AttributeError:
+            price = 'Not Available'
+    row['Price'] = price
+
+    try:
     # Locate the quantity element by its class and ID
      qty_element = soup.find('div', attrs={'class': 'x-quantity__availability', 'id': 'qtyAvailability'})
      if qty_element:
