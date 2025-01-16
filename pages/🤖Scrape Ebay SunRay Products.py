@@ -117,7 +117,7 @@ def scrape_ebay(item):
      if qty_element:
         # Extract the text from the span inside the div
         qty_text = qty_element.find('span', class_='ux-textspans ux-textspans--SECONDARY').text.strip()
-        st.write(f"Full text: {qty_text}")  # Optional: Output the full text for debugging
+     
 
         # Determine the quantity based on the text content
         if 'Last One' in qty_text:
